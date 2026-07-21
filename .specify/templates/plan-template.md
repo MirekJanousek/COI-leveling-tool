@@ -40,7 +40,22 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- **Official guidance**: Identify the targeted Captain of Industry version and cite the applicable official
+  modding guide, supported API, or extension point. Document any departure and fallback.
+- **Core scope**: Explain how the feature directly improves terrain leveling at or immediately adjacent to
+  retaining walls; reject unrelated terraforming or game-system work.
+- **Terrain and save safety**: Define mutation bounds, validation, deterministic behavior, edge cases, and
+  failure/recovery behavior. Unsafe or uncertain operations must leave game state unchanged.
+- **Compatibility and minimal intrusion**: Use the smallest supported integration surface; document supported
+  versions, dependencies, diagnostics, and known mod conflicts or mitigations.
+- **Evidence-driven quality**: Plan automated coverage for terrain logic and failures, plus a repeatable in-game
+  verification scenario on the targeted game version.
+- **Documentation and release readiness**: Plan installation, controls/configuration, supported versions,
+  limitations, and player-visible behavior.
+
+**Gate Result (pre-research)**: [PASS/FAIL with evidence or justified exception]
+
+**Gate Result (post-design)**: [PASS/FAIL with evidence or justified exception]
 
 ## Project Structure
 

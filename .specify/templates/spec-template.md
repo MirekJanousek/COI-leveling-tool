@@ -78,6 +78,9 @@
 - What happens when [boundary condition]?
 - How does system handle [error scenario]?
 
+Include map boundaries, overlapping or adjacent structures, invalid selections, interrupted operations,
+and any case where a terrain mutation cannot be proven safe.
+
 ## Requirements *(mandatory)*
 
 <!--
@@ -92,6 +95,10 @@
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
 - **FR-005**: System MUST [behavior, e.g., "log all security events"]
+
+Requirements MUST define the affected terrain boundary, pre-mutation validation, deterministic outcome,
+safe failure behavior, supported Captain of Industry version, dependency/compatibility behavior, and direct
+connection to retaining-wall leveling.
 
 *Example of marking unclear requirements:*
 
@@ -129,3 +136,12 @@
 - [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
 - [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
 - [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
+
+## Mod Integration Constraints *(mandatory)*
+
+- **Target Game Version**: [Supported Captain of Industry version or NEEDS CLARIFICATION]
+- **Official Guidance**: [Applicable official modding guide/API and version or NEEDS CLARIFICATION]
+- **Terrain Mutation Boundary**: [Exact player-visible area that may change]
+- **Safe Failure Behavior**: [How invalid, unsafe, or interrupted operations leave game state unchanged]
+- **Compatibility**: [Required dependencies, known mod interactions, and diagnostic behavior]
+- **In-Game Verification**: [Repeatable scenario and observable expected result on the target version]
