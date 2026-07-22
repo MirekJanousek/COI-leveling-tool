@@ -57,3 +57,22 @@ The in-game matrix is deferred because the public metadata gate already fails. N
 The user approved option 2 on 2026-07-22: completed construction costs are not refunded when the subsequent terrain operation fails. FR-028, SC-011, the adapter/gameplay contracts, research, data model, quickstart, plan, and task descriptions now require terrain rollback, normal temporary-entity cleanup, no additional charge, and one explicit no-refund failure notification.
 
 Exact charge capture and compensation are no longer required capabilities, so the exact-version capability profile can enable when all remaining public signatures are present. The remaining T020 in-game matrix must still prove Unity construction behavior, line atomicity, save tracking, rollback, cleanup, notification, and the selected cost mode before user-story implementation begins.
+
+## T020 in-game feasibility observations — 2026-07-22
+
+Test environment: Captain of Industry `v0.8.6a` sandbox with the Release feasibility package.
+
+Observed passes:
+
+- both the product-free Unity candidate and five-Concrete-Slab candidate load in the retaining-wall Terraforming category;
+- both candidates can be selected and placed as independent 1x1 layout entities;
+- the neutral base-game tile-surface cube is displayed instead of creating a retaining wall;
+- ordinary placement collision rejects overlap with a constructed retaining wall.
+
+Observed limitations/failures:
+
+- the ordinary machine placement path permits only one elevation step above or below the local terrain; larger requested elevation offsets cannot be selected;
+- a candidate completed at `terrain + 1` does not level terrain. This is not yet evidence of a terrain-adapter failure because T012/T019 currently register only the placement/cost prototypes; completion forwarding into the terrain spike is not wired;
+- the custom generated toolbar icon cannot be consumed as a loose PNG. The current package uses the built-in Concrete Slab icon pending MaFi's supported Unity asset-bundle workflow.
+
+Gate interpretation: retaining-wall menu integration, 1x1 placement, both cost modes, and wall collision are proven. Required general elevation selection is **not proven** on the machine placement surface and currently fails the gameplay contract. T020 remains open while the public elevation/placement API is investigated; user-story implementation remains blocked.

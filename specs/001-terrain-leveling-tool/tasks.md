@@ -40,14 +40,14 @@
 - [X] T009 [P] Implement stable failure reason codes and structured diagnostic context models in `src/COILevelingTool/Diagnostics/LevelingFailureCode.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnosticContext.cs`
 - [X] T010 [P] Write failing installed-assembly contract tests for runtime game version `0.8.6a`, `Mafi.Core 0.8.6.0`, designation size, occupancy, terrain, placement, completion, and removal signatures in `tests/COILevelingTool.Tests/Contract/V086CapabilityContractTests.cs`
 - [X] T011 Implement the exact-version capability profile and fail-closed startup probe in `src/COILevelingTool/Compatibility/V086/CapabilityProfileV086.cs` and `src/COILevelingTool/Compatibility/V086/CapabilityProbeV086.cs`
-- [ ] T012 [P] Create a minimal 1x1 feasibility prototype using the retaining-wall toolbar group/research node and both candidate cost modes in `src/COILevelingTool/Prototypes/LevelingStructureFeasibilityData.cs`
+- [X] T012 [P] Create a minimal 1x1 feasibility prototype using the retaining-wall toolbar group/research node and both candidate cost modes in `src/COILevelingTool/Prototypes/LevelingStructureFeasibilityData.cs`
 - [X] T013 [P] Write failing four-vertex snapshot, partial-write rollback, bounds, changed-event, and save-tracking spike tests in `tests/COILevelingTool.Tests/Contract/V086TerrainAdapterContractTests.cs`
 - [X] T014 Implement the public preserve-relative-layers/no-physics terrain spike behind snapshot/apply/verify/restore operations in `src/COILevelingTool/Compatibility/V086/CoiTerrainAdapterV086.cs`
 - [X] T015 [P] Write failing completion forwarding, duplicate-event idempotency, normal entity cleanup, cleanup-failure, and no-additional-charge spike tests in `tests/COILevelingTool.Tests/Contract/V086ConstructionAdapterContractTests.cs`
 - [X] T016 Implement construction completion, idempotent entity cleanup, and no-refund failure behavior in `src/COILevelingTool/Compatibility/V086/CoiConstructionAdapterV086.cs`
 - [X] T017 [P] Write failing elevation, straight-drag, whole-line revalidation, self-collision, and zero-partial-creation spike tests in `tests/COILevelingTool.Tests/Contract/V086PlacementAdapterContractTests.cs`
 - [X] T018 Implement the public placement/elevation/whole-line command spike in `src/COILevelingTool/Compatibility/V086/CoiPlacementAdapterV086.cs`
-- [ ] T019 Wire capability-gated prototype/dependency registration and feasibility logging in `src/COILevelingTool/Mod/COILevelingToolMod.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnostics.cs`
+- [X] T019 Wire capability-gated prototype/dependency registration and feasibility logging in `src/COILevelingTool/Mod/COILevelingToolMod.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnostics.cs`
 - [ ] T020 Execute the in-game `v0.8.6a` feasibility matrix, select Unity-only or five-Concrete-Slab fallback behavior, document actual Unity pricing and every pass/fail result in `specs/001-terrain-leveling-tool/feasibility.md`, and stop for plan revision if any safety-critical gate fails
 
 **Checkpoint**: The selected public integration path is proven on `v0.8.6a`, the unsupported path is disabled, and all adapter contract tests pass.
