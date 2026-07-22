@@ -36,10 +36,10 @@
 
 **CRITICAL**: Do not begin any user-story implementation until T008–T020 pass. If a required capability fails, stop and update the spec/plan; do not substitute undocumented integration.
 
-- [ ] T008 [P] Define game-independent adapter interfaces and result contracts in `src/COILevelingTool/Compatibility/ICoiTerrainAdapter.cs`, `src/COILevelingTool/Compatibility/ICoiPlacementAdapter.cs`, and `src/COILevelingTool/Compatibility/ICoiConstructionAdapter.cs`
-- [ ] T009 [P] Implement stable failure reason codes and structured diagnostic context models in `src/COILevelingTool/Diagnostics/LevelingFailureCode.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnosticContext.cs`
-- [ ] T010 [P] Write failing installed-assembly contract tests for runtime game version `0.8.6a`, `Mafi.Core 0.8.6.0`, designation size, occupancy, terrain, placement, completion, removal, and accounting signatures in `tests/COILevelingTool.Tests/Contract/V086CapabilityContractTests.cs`
-- [ ] T011 Implement the exact-version capability profile and fail-closed startup probe in `src/COILevelingTool/Compatibility/V086/CapabilityProfileV086.cs` and `src/COILevelingTool/Compatibility/V086/CapabilityProbeV086.cs`
+- [X] T008 [P] Define game-independent adapter interfaces and result contracts in `src/COILevelingTool/Compatibility/ICoiTerrainAdapter.cs`, `src/COILevelingTool/Compatibility/ICoiPlacementAdapter.cs`, and `src/COILevelingTool/Compatibility/ICoiConstructionAdapter.cs`
+- [X] T009 [P] Implement stable failure reason codes and structured diagnostic context models in `src/COILevelingTool/Diagnostics/LevelingFailureCode.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnosticContext.cs`
+- [X] T010 [P] Write failing installed-assembly contract tests for runtime game version `0.8.6a`, `Mafi.Core 0.8.6.0`, designation size, occupancy, terrain, placement, completion, removal, and accounting signatures in `tests/COILevelingTool.Tests/Contract/V086CapabilityContractTests.cs`
+- [X] T011 Implement the exact-version capability profile and fail-closed startup probe in `src/COILevelingTool/Compatibility/V086/CapabilityProfileV086.cs` and `src/COILevelingTool/Compatibility/V086/CapabilityProbeV086.cs`
 - [ ] T012 [P] Create a minimal 1x1 feasibility prototype using the retaining-wall toolbar group/research node and both candidate cost modes in `src/COILevelingTool/Prototypes/LevelingStructureFeasibilityData.cs`
 - [ ] T013 [P] Write failing four-vertex snapshot, partial-write rollback, bounds, changed-event, and save-tracking spike tests in `tests/COILevelingTool.Tests/Contract/V086TerrainAdapterContractTests.cs`
 - [ ] T014 Implement the public preserve-relative-layers/no-physics terrain spike behind snapshot/apply/verify/restore operations in `src/COILevelingTool/Compatibility/V086/CoiTerrainAdapterV086.cs`

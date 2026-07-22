@@ -14,9 +14,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\COILevelingTool\COILevelingTool.csproj" />
-    <Reference Include="Mafi" HintPath="$(COI_MANAGED)\Mafi.dll" Private="false" />
-    <Reference Include="Mafi.Core" HintPath="$(COI_MANAGED)\Mafi.Core.dll" Private="false" />
-    <Reference Include="Mafi.Base" HintPath="$(COI_MANAGED)\Mafi.Base.dll" Private="false" />
-    <Reference Include="Mafi.Unity" HintPath="$(COI_MANAGED)\Mafi.Unity.dll" Private="false" />
+    <Reference Include="Mafi" HintPath="$(COI_MANAGED)\Mafi.dll" Private="true" />
+    <Reference Include="Mafi.Core" HintPath="$(COI_MANAGED)\Mafi.Core.dll" Private="true" />
+    <Reference Include="Mafi.Base" HintPath="$(COI_MANAGED)\Mafi.Base.dll" Private="true" />
+    <Reference Include="Mafi.Unity" HintPath="$(COI_MANAGED)\Mafi.Unity.dll" Private="true" />
   </ItemGroup>
 </Project>
