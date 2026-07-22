@@ -8,7 +8,7 @@
 
 Build a Captain of Industry Update 4.2 mod that registers a temporary 1x1 layout entity beside retaining walls, supports elevation and straight-line placement, and levels the four terrain vertices bounding each selected square when construction completes. The mod targets game `v0.8.6a` and `Mafi.Core 0.8.6.0`, follows the official .NET Framework 4.8 mod template, reuses the retaining-wall toolbar group and research unlock, and stores no custom save data.
 
-All game-facing work is isolated behind a pinned `v0.8.6a` compatibility layer. Before feature implementation, executable spikes must prove that the public APIs can provide safe terrain rollback, all-or-none line placement, construction accounting/refunds, and the requested Unity construction behavior. Unsupported behavior fails closed; no Harmony patch, private reflection, raw save edit, or undocumented internal hook is allowed without a new approved plan exception.
+All game-facing work is isolated behind a pinned `v0.8.6a` compatibility layer. Before feature implementation, executable spikes must prove safe terrain rollback, all-or-none line placement, normal construction completion/removal, and the requested Unity construction behavior. Completed construction costs are not refunded after terrain failure because the public API exposes no exact receipt. Unsupported behavior fails closed; no Harmony patch, private reflection, raw save edit, or undocumented internal hook is allowed without a new approved plan exception.
 
 ## Technical Context
 
@@ -18,7 +18,7 @@ All game-facing work is isolated behind a pinned `v0.8.6a` compatibility layer. 
 
 **Storage**: No mod-owned persistent data; successful terrain changes use the game's changed-terrain serialization, while temporary construction state uses the game's entity/construction save system
 
-**Testing**: MSTest-based unit and contract tests for pure validation/accounting logic; assembly capability tests against the installed `v0.8.6a` metadata; repeatable in-game sandbox verification and log inspection
+**Testing**: MSTest-based unit and contract tests for pure validation/completion logic; assembly capability tests against the installed `v0.8.6a` metadata; repeatable in-game sandbox verification and log inspection
 
 **Target Platform**: Windows PC, Captain of Industry Update 4.2 `v0.8.6a`; Unity player `6000.3.19f1`
 
@@ -38,12 +38,12 @@ All game-facing work is isolated behind a pinned `v0.8.6a` compatibility layer. 
 - **Core scope**: Eligibility is restricted to an empty 1x1 terrain square whose canonical 4x4 terrain-designation parent contains a fully constructed retaining wall. Parent cells without a wall and squares overlapping a wall are rejected.
 - **Terrain and save safety**: The adapter preflights occupancy, bounds, four-vertex representability, wall eligibility, and the complete dragged line. It snapshots four vertex heights, performs simulation-thread mutation without terrain physics, verifies the result, and rolls back on failure. No mod save record is required; save/load persistence is verified in-game.
 - **Compatibility and minimal intrusion**: A version-gated adapter is the only game-facing layer. Missing capabilities disable placement/mutation and emit one actionable diagnostic. No unrelated behavior is replaced, and custom assets are avoided for the first implementation.
-- **Evidence-driven quality**: Pure logic, compatibility signatures, rollback injection, shared-vertex behavior, line atomicity, and refund idempotency receive automated coverage. A sandbox matrix verifies wall variants, bounds, occupancy, save/load, inaccessible sites, drag rejection, rollback, refunds, and removal.
+- **Evidence-driven quality**: Pure logic, compatibility signatures, rollback injection, shared-vertex behavior, line atomicity, and completion idempotency receive automated coverage. A sandbox matrix verifies wall variants, bounds, occupancy, save/load, inaccessible sites, drag rejection, rollback, notification, and removal.
 - **Documentation and release readiness**: Quickstart and release work cover installation, `COI_ROOT`, supported build, controls, canonical Concrete Slab terminology, limitations, logs, mod removal, and verification evidence.
 
 **Gate Result (pre-research)**: **PASS** — the spec defines scope, bounds, failure recovery, compatibility, and measurable acceptance; technical unknowns were routed to Phase 0 research.
 
-**Gate Result (post-design)**: **PASS** — research identified public `v0.8.6a` primitives and the design contains all unsupported composite guarantees behind fail-closed feasibility gates. No constitution exception is planned.
+**Gate Result (post-design revision)**: **CONDITIONAL PASS (2026-07-22)**. The approved product decision removes post-completion refunds from FR-028/SC-011. Exact charge capture is no longer required. Terrain rollback, normal entity cleanup, one failure notification, no additional charge, and all remaining placement/construction capabilities still require automated and in-game proof before story implementation.
 
 ## Project Structure
 

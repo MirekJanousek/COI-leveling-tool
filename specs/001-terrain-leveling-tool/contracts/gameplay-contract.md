@@ -37,13 +37,14 @@
 - Success removes the temporary structure immediately and requires no player demolition.
 - Changed terrain survives save/load through the game's terrain serialization.
 
-## Failure and Refund
+## Failure After Construction
 
 - Any preflight, mutation, or verification failure restores the four original vertex heights.
 - The failed temporary structure is removed.
-- Exact charged Unity and fallback products are refunded once.
+- Completed Unity and fallback-product construction costs are not refunded.
+- Failure handling makes no additional charge and notifies the player once about the lost completed cost.
 - Other structures from an already accepted line that completed successfully are not reverted.
-- A rollback or refund failure disables subsequent operations and produces a critical notification and detailed log entry.
+- A rollback or entity-cleanup failure disables subsequent operations and produces a critical notification and detailed log entry.
 
 ## Unsupported Version
 

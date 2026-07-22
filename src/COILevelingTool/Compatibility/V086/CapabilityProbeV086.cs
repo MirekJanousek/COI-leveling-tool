@@ -23,8 +23,6 @@ public sealed class CapabilityProbeV086
         var entities = m_core.GetType("Mafi.Core.Entities.EntitiesManager", false);
         var occupancy = m_core.GetType("Mafi.Core.Terrain.TerrainOccupancyManager", false);
         var designations = m_core.GetType("Mafi.Core.Terrain.Designation.TerrainDesignationsManager", false);
-        var assets = m_core.GetType("Mafi.Core.Economy.IAssetTransactionManager", false);
-        var upoints = m_core.GetType("Mafi.Core.Population.IUpointsManager", false);
         var massPlacer = m_unity.GetType("Mafi.Unity.Ui.Controllers.LayoutEntityPlacing.StaticEntityMassPlacer", false);
 
         bool Has(Type? type, string member) => type?.GetMember(member, flags).Length > 0;
@@ -39,8 +37,6 @@ public sealed class CapabilityProbeV086
             ["construction.completed_event"] = Has(construction, "EntityConstructed"),
             ["construction.progress"] = Has(construction, "GetConstructionProgress"),
             ["entity.normal_removal"] = Has(entities, "RemoveAndDestroyEntity") || Has(entities, "TryRemoveAndDestroyEntity"),
-            ["accounting.product_refund"] = Has(assets, "StoreProduct"),
-            ["accounting.unity_refund"] = Has(upoints, "GenerateUnity"),
             ["placement.mass_placer"] = Has(massPlacer, "SetLayoutEntityToPlace"),
             ["placement.elevation"] = massPlacer != null,
         };

@@ -98,24 +98,6 @@ Two mutually exclusive runtime modes:
 
 If neither mode can meet the contract through public APIs, capability validation fails and the tool remains disabled.
 
-### RefundLedger
-
-Transient, idempotent accounting snapshot captured before completion.
-
-| Field | Meaning |
-|---|---|
-| `EntityId` | Leveling structure being completed |
-| `ProductsCharged` | Exact product IDs and quantities actually charged |
-| `UnityCharged` | Exact UPoints amount actually charged |
-| `CompensationState` | `NotRequired`, `Pending`, `Completed`, or `Failed` |
-
-Validation rules:
-
-- Ledger is created before construction progress and charge information disappears.
-- Compensation may execute at most once per entity.
-- Full refund restores exact captured products and Unity, not recomputed estimates.
-- A failed compensation disables further terrain operations and emits a critical diagnostic.
-
 ## Terrain Models
 
 ### TerrainSnapshot
@@ -136,7 +118,6 @@ One structure completion affecting one target sub-tile.
 | `EntityId` | Completed temporary structure |
 | `Target` | Validated target sub-tile |
 | `Snapshot` | Original four vertex heights |
-| `RefundLedger` | Exact cost compensation record |
 | `State` | Current lifecycle state |
 | `Result` | Optional success/failure and diagnostic details |
 
@@ -149,9 +130,9 @@ Planned
      -> Mutating
         -> Verifying
            -> Applied -> EntityRemoved
-           -> RollingBack -> FailedRefunded -> EntityRemoved
-           -> RollingBack -> CompensationFailed -> Disabled
-     -> RejectedBeforeMutation -> FailedRefunded -> EntityRemoved
+            -> RollingBack -> FailedNoRefund -> EntityRemoved
+            -> RollingBack -> CleanupFailed -> Disabled
+      -> RejectedBeforeMutation -> FailedNoRefund -> EntityRemoved
   -> Cancelled
 ```
 
@@ -159,7 +140,7 @@ Invariants:
 
 - Mutation begins only after simulation-thread preflight succeeds.
 - Success means all four target vertices equal the requested elevation and the temporary entity is removed.
-- Failure means all original heights are restored, the temporary entity is removed, and exact costs are refunded.
+- Failure means all original heights are restored, the temporary entity is removed, no additional charge is made, and the player is told completed construction costs are not refunded.
 - No completed operation leaves mod-owned persistent state.
 
 ## Compatibility Models
@@ -177,6 +158,6 @@ Startup result proving required versioned integrations.
 | Terrain | Read, preserve-relative/no-physics write, notify/save behavior |
 | Placement | Elevation, straight drag, simulation-thread whole-line validation |
 | Completion | Constructed event and safe entity removal |
-| Accounting | Exact charge capture and idempotent product/Unity compensation |
+| Failure cost | No refund API required; completion failure performs no additional charge |
 
 Any missing required capability produces a disabled profile and one actionable player/log diagnostic.

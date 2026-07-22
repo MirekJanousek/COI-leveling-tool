@@ -22,7 +22,7 @@ Before implementing general feature code, run the `v0.8.6a` compatibility tests/
 - elevation and axis-aligned drag behavior for the custom 1x1 layout entity;
 - all-or-none simulation-thread line creation;
 - four-vertex height mutation, changed-terrain save tracking, verification, and rollback;
-- exact product/Unity charge capture and full idempotent compensation.
+- idempotent completion handling, normal entity cleanup, and one no-refund failure notification.
 
 If a required behavior lacks a supported public API, stop and update the plan/spec. Do not substitute Harmony, private reflection, or raw save/terrain writes.
 
@@ -86,7 +86,7 @@ Inspect:
 %APPDATA%\Captain of Industry\Logs
 ```
 
-Every compatibility or leveling failure must include a stable reason code, target/parent coordinates, requested height, cost mode, and rollback/refund result. An unsupported game version must disable the tool without disrupting the base game.
+Every compatibility or leveling failure must include a stable reason code, target/parent coordinates, requested height, cost mode, and rollback/removal result. An unsupported game version must disable the tool without disrupting the base game.
 
 ## Packaging and Removal
 

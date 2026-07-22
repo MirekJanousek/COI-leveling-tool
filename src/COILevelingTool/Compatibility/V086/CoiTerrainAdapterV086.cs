@@ -8,11 +8,16 @@ namespace COILevelingTool.Compatibility.V086;
 
 public sealed class CoiTerrainAdapterV086 : ICoiTerrainAdapter
 {
-    private readonly TerrainManager m_terrain;
+    private readonly ITerrainAccessV086 m_terrain;
     private readonly Func<bool> m_isSimulationThread;
     private readonly Action<int>? m_beforeWrite;
 
     public CoiTerrainAdapterV086(TerrainManager terrain, Func<bool> isSimulationThread, Action<int>? beforeWrite = null)
+        : this(new TerrainAccessV086(terrain), isSimulationThread, beforeWrite)
+    {
+    }
+
+    public CoiTerrainAdapterV086(ITerrainAccessV086 terrain, Func<bool> isSimulationThread, Action<int>? beforeWrite = null)
     {
         m_terrain = terrain ?? throw new ArgumentNullException(nameof(terrain));
         m_isSimulationThread = isSimulationThread ?? throw new ArgumentNullException(nameof(isSimulationThread));
@@ -27,10 +32,9 @@ public sealed class CoiTerrainAdapterV086 : ICoiTerrainAdapter
 
         foreach (var point in vertices.Distinct().OrderBy(x => x.X).ThenBy(x => x.Y))
         {
-            var tile = new Tile2i(point.X, point.Y);
-            if (!m_terrain.IsValidCoord(tile) || m_terrain.IsOffLimitsOrInvalid(tile))
+            if (!m_terrain.IsValid(point))
                 return AdapterResult.Fail(AdapterFailure.OutOfBounds, $"Terrain vertex {point} is invalid or off-limits.");
-            heights.Add(point, new TerrainHeight(m_terrain.GetHeight(tile).Value.RawValue));
+            heights.Add(point, new TerrainHeight(m_terrain.GetHeight(point)));
         }
         return AdapterResult.Success();
     }
@@ -63,7 +67,7 @@ public sealed class CoiTerrainAdapterV086 : ICoiTerrainAdapter
     public bool Verify(IReadOnlyList<GridPoint> vertices, TerrainHeight elevation)
     {
         foreach (var point in vertices.Distinct())
-            if (m_terrain.GetHeight(new Tile2i(point.X, point.Y)).Value.RawValue != checked((int)elevation.RawValue))
+            if (m_terrain.GetHeight(point) != elevation.RawValue)
                 return false;
         return true;
     }
@@ -80,7 +84,7 @@ public sealed class CoiTerrainAdapterV086 : ICoiTerrainAdapter
         {
             foreach (var item in snapshot.Heights.OrderBy(x => x.Key.X).ThenBy(x => x.Key.Y)) Set(item.Key, item.Value);
             foreach (var item in snapshot.Heights)
-                if (m_terrain.GetHeight(new Tile2i(item.Key.X, item.Key.Y)).Value.RawValue != checked((int)item.Value.RawValue))
+                if (m_terrain.GetHeight(item.Key) != item.Value.RawValue)
                     return AdapterResult.Fail(AdapterFailure.RollbackFailed, $"Rollback verification failed at {item.Key}.");
             return AdapterResult.Success();
         }
@@ -92,8 +96,40 @@ public sealed class CoiTerrainAdapterV086 : ICoiTerrainAdapter
 
     private void Set(GridPoint point, TerrainHeight height)
     {
-        var tile = new Tile2i(point.X, point.Y);
-        var indexed = tile.ExtendIndex(m_terrain);
-        m_terrain.SetHeightPreserveRelativeLayersNoPhysics(indexed, new HeightTilesF(Fix32.FromRaw(checked((int)height.RawValue))));
+        m_terrain.SetHeightWithoutPhysics(point, height.RawValue);
+        m_terrain.NotifyChanged(point);
     }
+}
+
+public interface ITerrainAccessV086
+{
+    bool IsValid(GridPoint point);
+    long GetHeight(GridPoint point);
+    void SetHeightWithoutPhysics(GridPoint point, long rawHeight);
+    void NotifyChanged(GridPoint point);
+}
+
+internal sealed class TerrainAccessV086 : ITerrainAccessV086
+{
+    private readonly TerrainManager m_terrain;
+
+    public TerrainAccessV086(TerrainManager terrain) =>
+        m_terrain = terrain ?? throw new ArgumentNullException(nameof(terrain));
+
+    public bool IsValid(GridPoint point)
+    {
+        var tile = new Tile2i(point.X, point.Y);
+        return m_terrain.IsValidCoord(tile) && !m_terrain.IsOffLimitsOrInvalid(tile);
+    }
+
+    public long GetHeight(GridPoint point) => m_terrain.GetHeight(new Tile2i(point.X, point.Y)).Value.RawValue;
+
+    public void SetHeightWithoutPhysics(GridPoint point, long rawHeight)
+    {
+        var indexed = new Tile2i(point.X, point.Y).ExtendIndex(m_terrain);
+        m_terrain.SetHeightPreserveRelativeLayersNoPhysics(indexed, new HeightTilesF(Fix32.FromRaw(checked((int)rawHeight))));
+    }
+
+    public void NotifyChanged(GridPoint point) =>
+        m_terrain.NotifyTileHeightLayersChanged(new Tile2i(point.X, point.Y).ExtendIndex(m_terrain));
 }

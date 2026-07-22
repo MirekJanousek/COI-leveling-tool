@@ -32,21 +32,21 @@
 
 ## Phase 2: Foundational Feasibility and Safety Gate (Blocking)
 
-**Purpose**: Prove the public game APIs and establish shared compatibility, diagnostics, terrain, placement, construction, and accounting boundaries.
+**Purpose**: Prove the public game APIs and establish shared compatibility, diagnostics, terrain, placement, and construction boundaries.
 
 **CRITICAL**: Do not begin any user-story implementation until T008–T020 pass. If a required capability fails, stop and update the spec/plan; do not substitute undocumented integration.
 
 - [X] T008 [P] Define game-independent adapter interfaces and result contracts in `src/COILevelingTool/Compatibility/ICoiTerrainAdapter.cs`, `src/COILevelingTool/Compatibility/ICoiPlacementAdapter.cs`, and `src/COILevelingTool/Compatibility/ICoiConstructionAdapter.cs`
 - [X] T009 [P] Implement stable failure reason codes and structured diagnostic context models in `src/COILevelingTool/Diagnostics/LevelingFailureCode.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnosticContext.cs`
-- [X] T010 [P] Write failing installed-assembly contract tests for runtime game version `0.8.6a`, `Mafi.Core 0.8.6.0`, designation size, occupancy, terrain, placement, completion, removal, and accounting signatures in `tests/COILevelingTool.Tests/Contract/V086CapabilityContractTests.cs`
+- [X] T010 [P] Write failing installed-assembly contract tests for runtime game version `0.8.6a`, `Mafi.Core 0.8.6.0`, designation size, occupancy, terrain, placement, completion, and removal signatures in `tests/COILevelingTool.Tests/Contract/V086CapabilityContractTests.cs`
 - [X] T011 Implement the exact-version capability profile and fail-closed startup probe in `src/COILevelingTool/Compatibility/V086/CapabilityProfileV086.cs` and `src/COILevelingTool/Compatibility/V086/CapabilityProbeV086.cs`
 - [ ] T012 [P] Create a minimal 1x1 feasibility prototype using the retaining-wall toolbar group/research node and both candidate cost modes in `src/COILevelingTool/Prototypes/LevelingStructureFeasibilityData.cs`
-- [ ] T013 [P] Write failing four-vertex snapshot, partial-write rollback, bounds, changed-event, and save-tracking spike tests in `tests/COILevelingTool.Tests/Contract/V086TerrainAdapterContractTests.cs`
-- [ ] T014 Implement the public preserve-relative-layers/no-physics terrain spike behind snapshot/apply/verify/restore operations in `src/COILevelingTool/Compatibility/V086/CoiTerrainAdapterV086.cs`
-- [ ] T015 [P] Write failing exact charge-capture, Unity/material compensation, duplicate-event, and partial-refund spike tests in `tests/COILevelingTool.Tests/Contract/V086ConstructionAdapterContractTests.cs`
-- [ ] T016 Implement construction completion, entity cleanup, charge capture, and compensation spikes in `src/COILevelingTool/Compatibility/V086/CoiConstructionAdapterV086.cs`
-- [ ] T017 [P] Write failing elevation, straight-drag, whole-line revalidation, self-collision, and zero-partial-creation spike tests in `tests/COILevelingTool.Tests/Contract/V086PlacementAdapterContractTests.cs`
-- [ ] T018 Implement the public placement/elevation/whole-line command spike in `src/COILevelingTool/Compatibility/V086/CoiPlacementAdapterV086.cs`
+- [X] T013 [P] Write failing four-vertex snapshot, partial-write rollback, bounds, changed-event, and save-tracking spike tests in `tests/COILevelingTool.Tests/Contract/V086TerrainAdapterContractTests.cs`
+- [X] T014 Implement the public preserve-relative-layers/no-physics terrain spike behind snapshot/apply/verify/restore operations in `src/COILevelingTool/Compatibility/V086/CoiTerrainAdapterV086.cs`
+- [X] T015 [P] Write failing completion forwarding, duplicate-event idempotency, normal entity cleanup, cleanup-failure, and no-additional-charge spike tests in `tests/COILevelingTool.Tests/Contract/V086ConstructionAdapterContractTests.cs`
+- [X] T016 Implement construction completion, idempotent entity cleanup, and no-refund failure behavior in `src/COILevelingTool/Compatibility/V086/CoiConstructionAdapterV086.cs`
+- [X] T017 [P] Write failing elevation, straight-drag, whole-line revalidation, self-collision, and zero-partial-creation spike tests in `tests/COILevelingTool.Tests/Contract/V086PlacementAdapterContractTests.cs`
+- [X] T018 Implement the public placement/elevation/whole-line command spike in `src/COILevelingTool/Compatibility/V086/CoiPlacementAdapterV086.cs`
 - [ ] T019 Wire capability-gated prototype/dependency registration and feasibility logging in `src/COILevelingTool/Mod/COILevelingToolMod.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnostics.cs`
 - [ ] T020 Execute the in-game `v0.8.6a` feasibility matrix, select Unity-only or five-Concrete-Slab fallback behavior, document actual Unity pricing and every pass/fail result in `specs/001-terrain-leveling-tool/feasibility.md`, and stop for plan revision if any safety-critical gate fails
 
@@ -58,24 +58,24 @@
 
 **Goal**: A player completes one valid 1x1 leveling structure in a retaining-wall parent cell; its four vertices reach the chosen elevation, terrain persists, and the temporary structure disappears.
 
-**Independent Test**: On `v0.8.6a`, construct a retaining wall, place one leveling structure on an eligible empty square in the same canonical 4x4 designation cell, finish with Unity at a vehicle-inaccessible site, and verify four-vertex leveling, no other vertex writes, wall integrity, immediate entity removal, save/load persistence, and full refund on injected failure.
+**Independent Test**: On `v0.8.6a`, construct a retaining wall, place one leveling structure on an eligible empty square in the same canonical 4x4 designation cell, finish with Unity at a vehicle-inaccessible site, and verify four-vertex leveling, no other vertex writes, wall integrity, immediate entity removal, save/load persistence, and rollback plus no-refund notification on injected failure.
 
 ### Tests for User Story 1
 
 - [ ] T021 [P] [US1] Write failing canonical 4x4 parent mapping, target eligibility, and four-bounding-vertex tests in `tests/COILevelingTool.Tests/Unit/TargetSubTileTests.cs`
 - [ ] T022 [P] [US1] Write failing terrain apply/verify/rollback tests with injected failures after writes 1–4 in `tests/COILevelingTool.Tests/Unit/TerrainLevelingServiceTests.cs`
-- [ ] T023 [P] [US1] Write failing cost-policy, exact-ledger, idempotent refund, and compensation-disable tests in `tests/COILevelingTool.Tests/Unit/RefundLedgerTests.cs`
-- [ ] T024 [P] [US1] Write failing completion lifecycle tests for revalidation, mutation, save notification, cleanup, and failure compensation in `tests/COILevelingTool.Tests/Unit/ConstructionCompletionServiceTests.cs`
+- [ ] T023 [P] [US1] Write failing selected cost-policy and displayed-cost tests in `tests/COILevelingTool.Tests/Unit/ConstructionCostPolicyTests.cs`
+- [ ] T024 [P] [US1] Write failing completion lifecycle tests for revalidation, mutation, save notification, idempotent cleanup, and one no-refund failure notification in `tests/COILevelingTool.Tests/Unit/ConstructionCompletionServiceTests.cs`
 
 ### Implementation for User Story 1
 
 - [ ] T025 [P] [US1] Implement canonical designation-cell mapping and completed-wall membership in `src/COILevelingTool/Placement/ParentDesignationCell.cs`
 - [ ] T026 [P] [US1] Implement the 1x1 target model, four-vertex footprint, bounds inputs, and eligibility state in `src/COILevelingTool/Placement/TargetSubTile.cs`
 - [ ] T027 [P] [US1] Implement deterministic unique-vertex snapshots and mutation outcomes in `src/COILevelingTool/Terrain/TerrainSnapshot.cs` and `src/COILevelingTool/Terrain/TerrainMutationResult.cs`
-- [ ] T028 [P] [US1] Implement the selected Unity/five-Concrete-Slab cost policy and exact charge ledger in `src/COILevelingTool/Construction/ConstructionCostPolicy.cs` and `src/COILevelingTool/Construction/RefundLedger.cs`
+- [ ] T028 [P] [US1] Implement the selected Unity/five-Concrete-Slab cost policy and displayed cost in `src/COILevelingTool/Construction/ConstructionCostPolicy.cs`
 - [ ] T029 [US1] Implement single-target wall, occupancy, reservation, bounds, elevation, and four-vertex preflight in `src/COILevelingTool/Placement/PlacementValidator.cs`
 - [ ] T030 [US1] Implement simulation-thread snapshot/apply/verify/rollback orchestration without terrain physics in `src/COILevelingTool/Terrain/TerrainLevelingService.cs`
-- [ ] T031 [US1] Implement completion event filtering, target revalidation, exact compensation, idempotency, and immediate entity removal in `src/COILevelingTool/Construction/ConstructionCompletionService.cs`
+- [ ] T031 [US1] Implement completion event filtering, target revalidation, idempotency, immediate entity removal, and one no-refund failure notification in `src/COILevelingTool/Construction/ConstructionCompletionService.cs`
 - [ ] T032 [US1] Register the US1 services and completion subscription through the verified capability profile in `src/COILevelingTool/Mod/COILevelingToolMod.cs`
 - [ ] T033 [US1] Execute and record the independent single-square, inaccessible-Unity, save/load, current-height, and injected-failure verification in `specs/001-terrain-leveling-tool/verification/us1-leveling.md`
 
@@ -113,24 +113,24 @@
 
 **Goal**: Invalid targets and incompatible environments fail closed with clear feedback; terrain, structures, and player balances remain safe.
 
-**Independent Test**: Attempt every prohibited placement and injected failure on `v0.8.6a`, including one invalid square in a dragged line, and verify zero partial construction, no unintended terrain/structure changes, exact refunds, diagnostics, and operation disablement after unrecoverable compensation failure.
+**Independent Test**: Attempt every prohibited placement and injected failure on `v0.8.6a`, including one invalid square in a dragged line, and verify zero partial construction, no unintended terrain/structure changes, diagnostics, one no-refund notification, and operation disablement after unrecoverable rollback or cleanup failure.
 
 ### Tests for User Story 3
 
 - [ ] T044 [P] [US3] Write failing boundary, off-limits, occupied, reserved, wall-overlap, no-wall-parent, incomplete-wall, invalid-elevation, self-collision, and non-linear-selection tests in `tests/COILevelingTool.Tests/Unit/PlacementValidatorSafetyTests.cs`
 - [ ] T045 [P] [US3] Write failing unsupported-version, missing-capability, single-notification, and normal-game-preservation tests in `tests/COILevelingTool.Tests/Unit/CompatibilityFailureTests.cs`
-- [ ] T046 [P] [US3] Write failing rollback-failure, partial-refund, duplicate-compensation, and global-disable tests in `tests/COILevelingTool.Tests/Unit/FailureCompensationTests.cs`
+- [ ] T046 [P] [US3] Write failing rollback-failure, cleanup-failure, duplicate-notification, and global-disable tests in `tests/COILevelingTool.Tests/Unit/FailureRecoveryTests.cs`
 - [ ] T047 [P] [US3] Write failing structured reason-code and required-context logging tests in `tests/COILevelingTool.Tests/Unit/LevelingDiagnosticsTests.cs`
 
 ### Implementation for User Story 3
 
 - [ ] T048 [US3] Complete all negative validation branches and localized failure results in `src/COILevelingTool/Placement/PlacementValidator.cs` and `src/COILevelingTool/Placement/PlacementFailure.cs`
 - [ ] T049 [US3] Enforce final commit revalidation, whole-batch cleanup, and zero-cost/zero-terrain partial failure in `src/COILevelingTool/Compatibility/V086/CoiPlacementAdapterV086.cs`
-- [ ] T050 [US3] Implement rollback/refund escalation, operation disablement, one player notification, and structured logs in `src/COILevelingTool/Construction/ConstructionCompletionService.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnostics.cs`
+- [ ] T050 [US3] Implement rollback/cleanup escalation, operation disablement, one no-refund player notification, and structured logs in `src/COILevelingTool/Construction/ConstructionCompletionService.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnostics.cs`
 - [ ] T051 [US3] Enforce unsupported-version and missing-capability fail-closed behavior without disturbing base-game registration in `src/COILevelingTool/Mod/COILevelingToolMod.cs`
-- [ ] T052 [US3] Execute and record the full unsafe-placement, invalid-line, map-edge, occupancy, other-terrain-mod, rollback, refund, and unsupported-version matrix in `specs/001-terrain-leveling-tool/verification/us3-safety.md`
+- [ ] T052 [US3] Execute and record the full unsafe-placement, invalid-line, map-edge, occupancy, other-terrain-mod, rollback, cleanup, no-refund notification, and unsupported-version matrix in `specs/001-terrain-leveling-tool/verification/us3-safety.md`
 
-**Checkpoint**: User Story 3 passes all negative/fault-injection tests, and every unsafe condition produces the specified unchanged or compensated outcome.
+**Checkpoint**: User Story 3 passes all negative/fault-injection tests, and every unsafe condition produces the specified unchanged or safely recovered outcome.
 
 ---
 
@@ -169,7 +169,7 @@ Setup
   -> Foundational feasibility/safety gate
        -> US1: single-square leveling (MVP)
        -> US2: discovery, elevation, and straight drag
-       -> US3: unsafe rejection and compensation
+       -> US3: unsafe rejection and recovery
             -> Polish and release readiness
 ```
 
@@ -237,7 +237,7 @@ These tests use different files and can be written concurrently before T048–T0
 ### Incremental Delivery
 
 1. **Foundation**: Confirm the public Update 4.2 integration is safe and supported.
-2. **US1**: Deliver one-square terrain leveling, cleanup, persistence, and compensation.
+2. **US1**: Deliver one-square terrain leveling, cleanup, persistence, and explicit no-refund failure handling.
 3. **US2**: Add menu/research polish, elevation preview, and straight-line placement.
 4. **US3**: Complete negative handling, fail-closed compatibility, and fault recovery.
 5. **Release**: Measure, document, package, and rerun the complete sandbox matrix.
@@ -247,5 +247,5 @@ These tests use different files and can be written concurrently before T048–T0
 - `[P]` means file-level parallelism only; avoid concurrent edits to shared registration/service files.
 - The canonical fallback resource is `Concrete Slab`, not the obsolete in-game Bricks product.
 - The four vertices bounding a selected square are shared with neighboring terrain; tests compare written vertex coordinates and document possible adjacent visual slopes.
-- T020 is a hard stop. Unsupported fractional Unity, line atomicity, terrain rollback, or exact compensation must be resolved by revising the product/plan, never by undocumented patching.
+- T020 is a hard stop. Unsupported fractional Unity, line atomicity, terrain rollback, or normal cleanup must be resolved by revising the product/plan, never by undocumented patching.
 - Commit after each completed task or coherent test/implementation pair.

@@ -10,7 +10,7 @@ public enum AdapterFailure
 {
     None, UnsupportedVersion, MissingCapability, InvalidTarget, OutOfBounds,
     Occupied, Reserved, TerrainWriteFailed, VerificationFailed, RollbackFailed,
-    PlacementFailed, CleanupFailed, CompensationFailed, DuplicateOperation
+    PlacementFailed, CleanupFailed, DuplicateOperation
 }
 
 public readonly record struct AdapterResult(bool Succeeded, AdapterFailure Failure, string Detail)
@@ -22,6 +22,3 @@ public readonly record struct AdapterResult(bool Succeeded, AdapterFailure Failu
 public sealed record TerrainState(IReadOnlyDictionary<GridPoint, TerrainHeight> Heights);
 public sealed record PlacementRequest(IReadOnlyList<GridPoint> Targets, TerrainHeight Elevation);
 public sealed record PlacementBatchResult(AdapterResult Result, IReadOnlyList<object> CreatedEntities);
-public sealed record ChargeLedger(IReadOnlyDictionary<string, int> Products, long UnityRaw);
-public sealed record CompensationResult(AdapterResult Result, IReadOnlyList<string> CompletedSteps);
-

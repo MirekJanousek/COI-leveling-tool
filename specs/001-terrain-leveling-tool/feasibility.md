@@ -29,3 +29,31 @@ dotnet test tests/COILevelingTool.Tests/COILevelingTool.Tests.csproj -c Release 
 The installed `changelog.txt` starts with `v0.8.6a`; the managed assemblies remain versioned `0.8.6.0`. On 2026-07-22 the approved target was revised from `v0.8.6` build 609 to exact runtime version `v0.8.6a`. No authoritative numeric build identifier for `v0.8.6a` was found in the installed changelog or recent game logs, so the planned compatibility probe must validate the runtime version string and required public capabilities rather than infer the patch from assembly version alone.
 
 The former version blocker is resolved. The Release skeleton was rebuilt and tested against the revised installed target, completing T007. Phase 2 remains gated by its capability and in-game feasibility tasks.
+
+## Terrain API spike — 2026-07-22
+
+The installed `Mafi.Core.xml` contract for `TerrainManager.SetHeightPreserveRelativeLayersNoPhysics` states that the operation does not invoke events or set the changed bit. The adapter now pairs every apply and restore write with the public `NotifyTileHeightLayersChanged` API, whose contract explicitly sets the changed flag and defers the height-change event.
+
+Automated contract coverage proves deterministic four-vertex snapshotting, bounds rejection before mutation, changed notification for every write, verification, and rollback after injected failures before writes 1–4. The Release suite passes with 27 tests. Save/reload persistence and actual simulation-thread behavior remain part of the T020 in-game matrix and are not claimed by this automated spike.
+
+Construction and placement access bridges plus fault-injection tests have been added as supporting work, but T015–T018 remain open until the bridges are bound to and proven through the actual public `v0.8.6a` services.
+
+## Phase 2 gate result — FAIL (plan revision required)
+
+Installed `v0.8.6a` public metadata exposes `IConstructionManager.EntityConstructed`, `GetConstructionProgress`, construction buffers, normal entity removal, product storage, and Unity generation. However, `IEntityConstructionProgress` contains only entity and priority state. Neither it nor the completion event exposes an exact ledger containing both products and Unity actually charged, and the public API does not provide a completion-time Unity charge-capture operation.
+
+This fails the adapter contract requirement to capture actual material and Unity charges before construction progress is discarded. Recomputing from prototype costs would not prove the actual charge and is explicitly prohibited by the accounting contract. The capability profile therefore reports `construction.exact_charge_capture=false` and remains disabled even on the exact supported version.
+
+Per the constitution and T020, no user-story implementation may begin. The spec and plan need an approved revision choosing one of these product changes:
+
+1. remove post-completion Unity refund guarantees and accept only pre-mutation failure handling;
+2. use a no-cost temporary entity and perform a separately controlled public Unity transaction whose amount the mod owns; or
+3. approve a narrowly documented non-public integration exception (highest compatibility risk and not recommended).
+
+The in-game matrix is deferred because the public metadata gate already fails. No private reflection, Harmony patch, raw save edit, or undocumented hook was substituted.
+
+## Approved gate revision — option 2
+
+The user approved option 2 on 2026-07-22: completed construction costs are not refunded when the subsequent terrain operation fails. FR-028, SC-011, the adapter/gameplay contracts, research, data model, quickstart, plan, and task descriptions now require terrain rollback, normal temporary-entity cleanup, no additional charge, and one explicit no-refund failure notification.
+
+Exact charge capture and compensation are no longer required capabilities, so the exact-version capability profile can enable when all remaining public signatures are present. The remaining T020 in-game matrix must still prove Unity construction behavior, line atomicity, save tracking, rollback, cleanup, notification, and the selected cost mode before user-story implementation begins.

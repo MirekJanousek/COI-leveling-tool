@@ -14,6 +14,5 @@ public sealed record LevelingDiagnosticContext(
     TerrainHeight? Elevation = null,
     string? CostMode = null,
     string? RollbackStatus = null,
-    string? RefundStatus = null,
+    string? CleanupStatus = null,
     string? Detail = null);
-

@@ -107,13 +107,13 @@
 - https://www.captain-of-industry.com/post/update42-is-out
 - Installed `Mafi.Core.dll` public metadata for batch/static entity commands and validation APIs
 
-## Completion, Removal, and Refund Compensation
+## Completion, Removal, and Post-Completion Cost
 
-**Decision**: Subscribe on the simulation thread to the public construction-completed event and filter the leveling prototype. Capture an idempotent cost ledger before completion. On success, mutate and verify terrain, then remove/destroy the temporary entity. On failure, restore terrain, return exact captured products, restore exact captured Unity, remove the entity, mark the ledger compensated, notify the player, and log the result.
+**Decision**: Subscribe on the simulation thread to the public construction-completed event and filter the leveling prototype. On success, mutate and verify terrain, then remove/destroy the temporary entity. On failure, restore terrain, remove the entity, make no additional charge, notify the player that completed construction costs are not refunded, and log the result.
 
-**Rationale**: Public completion, entity removal, product storage, and Unity generation primitives exist, but no cross-system transaction or post-completion receipt exists. Capturing the actual charge before progress disappears avoids recomputation drift. Idempotency prevents duplicate event/refund behavior.
+**Rationale**: Public completion and normal entity removal exist, but no exact post-completion products-and-Unity receipt exists. The approved 2026-07-22 product decision removes the refund guarantee rather than introducing an undocumented integration. Completion handling remains idempotent so duplicate events cannot repeat mutation or cleanup.
 
-**Alternatives considered**: The generic quick-remove/refund command may apply difficulty/deconstruction ratios and does not prove a 100% refund. Ignoring post-payment failure contradicts the specification.
+**Alternatives considered**: The generic quick-remove/refund command may apply difficulty/deconstruction ratios and does not prove a 100% refund. A private charge hook was rejected. A mod-controlled separate Unity transaction was not selected.
 
 **Sources**:
 
@@ -134,7 +134,7 @@
 
 ## Diagnostics and Compatibility Failure
 
-**Decision**: At startup, probe exact required public types, methods, constants, and game/assembly versions. If any capability is missing, do not register or enable terrain mutation; emit one actionable in-game warning and log stable reason codes with version, entity, target, parent origin, vertices, elevation, cost mode, and rollback/refund status.
+**Decision**: At startup, probe exact required public types, methods, constants, and game/assembly versions. If any capability is missing, do not register or enable terrain mutation; emit one actionable in-game warning and log stable reason codes with version, entity, target, parent origin, vertices, elevation, cost mode, and rollback/removal status.
 
 **Rationale**: The official guide calls the API experimental and directs modders to game logs. Fail-closed capability checks preserve normal gameplay after updates.
 
@@ -147,7 +147,7 @@
 
 ## Test Strategy
 
-**Decision**: Split evidence into pure unit tests, installed-assembly capability contracts, and an in-game sandbox matrix on `v0.8.6a`. Include injected failures after each of four vertex writes and each refund step, shared-vertex adjacency, every retaining-wall orientation/position, line atomicity, map limits, occupancy/reservations, vehicle-inaccessible Unity completion, save/load, and clean mod removal.
+**Decision**: Split evidence into pure unit tests, installed-assembly capability contracts, and an in-game sandbox matrix on `v0.8.6a`. Include injected failures after each of four vertex writes and cleanup, shared-vertex adjacency, every retaining-wall orientation/position, line atomicity, map limits, occupancy/reservations, vehicle-inaccessible Unity completion, save/load, and clean mod removal.
 
 **Rationale**: MaFi provides no official automated gameplay harness. Pure policy logic remains testable outside the game, while integration guarantees require the actual simulation and save system.
 

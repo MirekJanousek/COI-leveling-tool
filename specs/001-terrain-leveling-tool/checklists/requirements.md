@@ -33,5 +33,5 @@
 
 - Validation passed on the first review iteration.
 - Clarification validation passed after defining straight-line drag placement and atomic rejection when any selected tile is invalid.
-- Clarification validation passed after defining Unity construction and fallback costs, parent-tile eligibility, retaining-wall non-overlap, and full refunds on terrain-mutation failure.
+- Clarification validation passed after defining Unity construction and fallback costs, parent-tile eligibility, retaining-wall non-overlap, and the approved no-refund notification behavior on post-construction terrain-mutation failure.
 - The exact supported stable game version and matching official modding guidance are intentionally pinned during planning, as defined by the specification's compatibility assumption.

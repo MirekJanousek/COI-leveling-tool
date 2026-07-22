@@ -1,5 +1,7 @@
 # Feature Specification: COI Terrain Leveling Tool
 
+> **Implementation status (2026-07-22): Phase 2 revision approved.** Because the pinned public APIs do not expose an exact completion-time cost ledger, completed construction costs are not refunded after a terrain failure. Terrain rollback, temporary-entity cleanup, notification, and fail-closed disablement remain mandatory.
+
 **Feature Branch**: `001-terrain-leveling-tool`
 
 **Created**: 2026-07-21
@@ -16,7 +18,11 @@
 - Q: How should the leveling structure be constructed? → A: Prefer Unity-only instant construction with no materials; if unsupported, require five concrete bricks per structure and allow Unity quick-build at approximately 0.05 Unity. Vehicle-access warnings may appear but must not prevent Unity completion.
 - Q: Where may the leveling structure be placed relative to retaining walls? → A: Only on eligible empty sub-tiles associated with retaining walls; it cannot overlap retaining walls or be used elsewhere.
 - Q: What makes a sub-tile eligible through proximity to a retaining wall? → A: It shares the same parent tile as a retaining wall and does not overlap the wall.
-- Q: If Unity construction completes but terrain leveling fails, what happens to the structure and spent costs? → A: Remove the temporary structure and fully refund all Unity and any fallback materials.
+- Q: If Unity construction completes but terrain leveling fails, what happens to the structure and spent costs? → A: Remove the temporary structure and fully refund all Unity and any fallback materials. Superseded by the 2026-07-22 feasibility decision below.
+
+### Session 2026-07-22
+
+- Q: The public API cannot prove an exact post-completion Unity/material refund. Which behavior should the product use? → A: Do not refund completed construction costs after a terrain failure; still restore terrain, remove the temporary structure, notify the player, and disable further operations if rollback or cleanup fails.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -69,7 +75,7 @@ As a player, I receive normal placement feedback when leveling would be invalid 
 3. **Given** the selected elevation cannot be applied safely, **When** construction is attempted, **Then** the operation fails atomically and communicates that it did not complete.
 4. **Given** a dragged line containing at least one invalid sub-tile, **When** the player attempts to commit the line, **Then** the entire line is rejected and no selected sub-tile is constructed or leveled.
 5. **Given** a target sub-tile that overlaps a retaining wall or whose parent tile contains no retaining wall, **When** the player attempts placement, **Then** the target is rejected without changing terrain or structures.
-6. **Given** a completed leveling structure whose terrain mutation fails, **When** failure handling completes, **Then** the temporary structure is removed, the sub-tile remains unchanged, and all Unity and fallback materials spent on that structure are refunded.
+6. **Given** a completed leveling structure whose terrain mutation fails, **When** failure handling completes, **Then** the temporary structure is removed, the sub-tile remains unchanged, the player is notified that completed construction costs are not refunded, and no additional charge is made.
 
 ### Edge Cases
 
@@ -120,7 +126,7 @@ As a player, I receive normal placement feedback when leveling would be invalid 
 - **FR-025**: The active construction mode, material requirement, and Unity cost MUST be visible to the player before committing placement.
 - **FR-026**: A target sub-tile MUST be empty, MUST NOT overlap a retaining wall, and MUST share a parent tile with at least one retaining wall; a sub-tile failing any of these conditions MUST be invalid.
 - **FR-027**: Every sub-tile in a dragged line MUST independently satisfy the retaining-wall parent-tile rule; if any sub-tile does not, the entire line MUST be rejected under FR-020.
-- **FR-028**: If a completed leveling structure cannot finish its terrain mutation successfully, the mod MUST remove that temporary structure and fully refund all Unity and any fallback materials spent on that structure.
+- **FR-028**: If a completed leveling structure cannot finish its terrain mutation successfully, the mod MUST restore its original terrain, remove the temporary structure, and notify the player that completed construction costs are not refunded. Failure handling MUST NOT make any additional charge.
 
 ### Key Entities
 
@@ -144,7 +150,7 @@ As a player, I receive normal placement feedback when leveling would be invalid 
 - **SC-008**: In 100% of valid straight-line drag tests, the number of temporary structures created equals the number of consecutive sub-tiles previewed, and every selected sub-tile reaches the shared chosen elevation.
 - **SC-009**: In 100% of valid placements unreachable by construction vehicles, the player can complete every leveling structure using Unity and obtain the same terrain result as at a reachable location.
 - **SC-010**: In 100% of tests on sub-tiles overlapping retaining walls or belonging to parent tiles without retaining walls, placement is rejected and no terrain or structure changes.
-- **SC-011**: In 100% of simulated post-construction terrain failures, the target sub-tile remains unchanged, the temporary structure is absent, and the player's Unity and fallback material balances return to their pre-construction values.
+- **SC-011**: In 100% of simulated post-construction terrain failures, the target sub-tile remains unchanged, the temporary structure is absent, no additional charge is made, and the player receives one actionable failure notification stating that completed construction costs are not refunded.
 
 ## Assumptions
 
@@ -163,6 +169,6 @@ As a player, I receive normal placement feedback when leveling would be invalid 
 - **Target Game Version**: Latest publicly released stable, non-beta Captain of Industry version at the start of implementation planning; the exact version must be pinned in the plan and release metadata.
 - **Official Guidance**: Official Captain of Industry modding guidance applicable to the pinned game version; the specific supported interface and guidance version must be confirmed during planning.
 - **Terrain Mutation Boundary**: Exactly the terrain contained within the explicitly selected empty sub-tile or straight line of consecutive empty sub-tiles whose parent tiles contain retaining walls and that are covered by the previewed 1x1 leveling structures; no unselected sub-tile, retaining wall, or other structure may be altered.
-- **Safe Failure Behavior**: Validate every selected sub-tile before committing a placement. If any selected sub-tile is invalid, reject the entire placement and create no construction jobs. After valid placement, each structure validates and mutates only its own sub-tile atomically when its individual construction completes; a failure leaves that sub-tile unchanged, removes the failed temporary structure, and fully refunds its Unity and fallback materials without reverting other structures that already completed successfully.
+- **Safe Failure Behavior**: Validate every selected sub-tile before committing a placement. If any selected sub-tile is invalid, reject the entire placement and create no construction jobs. After valid placement, each structure validates and mutates only its own sub-tile atomically when its individual construction completes; a failure leaves that sub-tile unchanged, removes the failed temporary structure, makes no additional charge, and notifies the player that completed costs are not refunded without reverting other structures that already completed successfully.
 - **Compatibility**: Declare the pinned game version, all required dependencies, and known conflicts involving terrain, construction menus, or retaining walls. When compatibility cannot be established, disable the mutation and expose actionable diagnostic information.
 - **In-Game Verification**: On the pinned game version, create uneven empty sub-tiles in a parent tile containing a retaining wall at a location unreachable by construction vehicles, drag a straight line of 1x1 leveling structures at a chosen valid elevation, complete them using Unity, and observe that every selected sub-tile reaches that elevation, unselected sub-tiles and the wall remain unchanged, all temporary structures disappear, and the result survives save/load. Confirm that no materials are required in the preferred mode, or that exactly five concrete bricks per structure and the documented Unity quick-build cost apply in fallback mode. Repeat with one invalid sub-tile in the line and verify that the whole placement is rejected without terrain change. Attempt placement over a retaining wall and in a parent tile without a retaining wall and verify both are rejected.
