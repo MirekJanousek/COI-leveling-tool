@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-1. Install Captain of Industry Update 4.2 `v0.8.6` build `609` on Windows.
+1. Install Captain of Industry Update 4.2 `v0.8.6a` on Windows.
 2. Install the .NET Framework 4.8 Developer Pack and a current Visual Studio with C# build tools.
 3. Set `COI_ROOT` to the game installation root, for example:
 
@@ -16,7 +16,7 @@ The official mod guide recommends Visual Studio. `dotnet build` is useful for co
 
 ## Required Feasibility Gate
 
-Before implementing general feature code, run the `v0.8.6` compatibility tests/spikes and record evidence for:
+Before implementing general feature code, run the `v0.8.6a` compatibility tests/spikes and record evidence for:
 
 - material-free Unity-only construction and fractional cost support;
 - elevation and axis-aligned drag behavior for the custom 1x1 layout entity;
@@ -55,7 +55,7 @@ The project deployment target copies the package to:
 dotnet test tests/COILevelingTool.Tests/COILevelingTool.Tests.csproj -c Release
 ```
 
-The contract suite requires `COI_ROOT` and must verify build `609`, `Mafi.Core 0.8.6.0`, required public signatures, terrain-designation size, and manifest version bounds.
+The contract suite requires `COI_ROOT` and must verify runtime game version `0.8.6a`, `Mafi.Core 0.8.6.0`, required public signatures, terrain-designation size, and manifest version bounds.
 
 ## In-Game Verification
 
@@ -91,7 +91,7 @@ Every compatibility or leveling failure must include a stable reason code, targe
 ## Packaging and Removal
 
 - Package the mod directory as the ZIP root and keep its folder name equal to manifest `id`.
-- Set `min_game_version` and `max_verified_game_version` to `0.8.6`.
+- Set `min_game_version` and `max_verified_game_version` to `0.8.6a`.
 - Enable `can_add_to_saved_game` only after add-to-save testing passes.
 - Enable `can_remove_from_saved_game` only after clean, planned, and under-construction removal cases are proven safe. Until then, document that all pending leveling structures must be completed or cancelled before removing the mod.
-- Release notes must state build `609`, actual cost mode/Unity price, known asset/drag limitations, and completed in-game evidence.
+- Release notes must state exact game version `0.8.6a`, actual cost mode/Unity price, known asset/drag limitations, and completed in-game evidence.

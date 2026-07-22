@@ -18,15 +18,15 @@
 
 **Purpose**: Create the official Update 4.2 mod/test structure and reproducible build/package configuration.
 
-- [ ] T001 Create `COILevelingTool.slnx` and scaffold the official `net48` mod project with direct `COI_ROOT` references in `src/COILevelingTool/COILevelingTool.csproj`
-- [ ] T002 [P] Create the Update 4 manifest with mod ID, version `0.1.0`, DLL, `0.8.6` version bounds, and conservative save add/remove flags in `src/COILevelingTool/manifest.json`
-- [ ] T003 [P] Add player installation, supported-build, logging, and pending-structure removal guidance in `src/COILevelingTool/readme.txt`
-- [ ] T004 [P] Create the MSTest `net48` project and reference the mod project plus installed game assemblies in `tests/COILevelingTool.Tests/COILevelingTool.Tests.csproj`
-- [ ] T005 [P] Configure shared nullable, warnings, deterministic build, and formatting rules in `Directory.Build.props` and `.editorconfig`
-- [ ] T006 Add Release deployment and ZIP packaging targets modeled on MaFi's ExampleMod to `src/COILevelingTool/COILevelingTool.csproj`
-- [ ] T007 Run the empty-skeleton Release build and tests, then record toolchain/version/output evidence in `specs/001-terrain-leveling-tool/feasibility.md`
+- [X] T001 Create `COILevelingTool.slnx` and scaffold the official `net48` mod project with direct `COI_ROOT` references in `src/COILevelingTool/COILevelingTool.csproj`
+- [X] T002 [P] Create the Update 4 manifest with mod ID, version `0.1.0`, DLL, `0.8.6a` version bounds, and conservative save add/remove flags in `src/COILevelingTool/manifest.json`
+- [X] T003 [P] Add player installation, supported-build, logging, and pending-structure removal guidance in `src/COILevelingTool/readme.txt`
+- [X] T004 [P] Create the MSTest `net48` project and reference the mod project plus installed game assemblies in `tests/COILevelingTool.Tests/COILevelingTool.Tests.csproj`
+- [X] T005 [P] Configure shared nullable, warnings, deterministic build, and formatting rules in `Directory.Build.props` and `.editorconfig`
+- [X] T006 Add Release deployment and ZIP packaging targets modeled on MaFi's ExampleMod to `src/COILevelingTool/COILevelingTool.csproj`
+- [X] T007 Run the empty-skeleton Release build and tests, then record toolchain/version/output evidence in `specs/001-terrain-leveling-tool/feasibility.md`
 
-**Checkpoint**: The empty mod and test project compile against installed game `v0.8.6` build `609`, and packaging produces the expected mod directory.
+**Checkpoint**: The empty mod and test project compile against installed game `v0.8.6a`, and packaging produces the expected mod directory.
 
 ---
 
@@ -38,7 +38,7 @@
 
 - [ ] T008 [P] Define game-independent adapter interfaces and result contracts in `src/COILevelingTool/Compatibility/ICoiTerrainAdapter.cs`, `src/COILevelingTool/Compatibility/ICoiPlacementAdapter.cs`, and `src/COILevelingTool/Compatibility/ICoiConstructionAdapter.cs`
 - [ ] T009 [P] Implement stable failure reason codes and structured diagnostic context models in `src/COILevelingTool/Diagnostics/LevelingFailureCode.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnosticContext.cs`
-- [ ] T010 [P] Write failing installed-assembly contract tests for build `609`, `Mafi.Core 0.8.6.0`, designation size, occupancy, terrain, placement, completion, removal, and accounting signatures in `tests/COILevelingTool.Tests/Contract/V086CapabilityContractTests.cs`
+- [ ] T010 [P] Write failing installed-assembly contract tests for runtime game version `0.8.6a`, `Mafi.Core 0.8.6.0`, designation size, occupancy, terrain, placement, completion, removal, and accounting signatures in `tests/COILevelingTool.Tests/Contract/V086CapabilityContractTests.cs`
 - [ ] T011 Implement the exact-version capability profile and fail-closed startup probe in `src/COILevelingTool/Compatibility/V086/CapabilityProfileV086.cs` and `src/COILevelingTool/Compatibility/V086/CapabilityProbeV086.cs`
 - [ ] T012 [P] Create a minimal 1x1 feasibility prototype using the retaining-wall toolbar group/research node and both candidate cost modes in `src/COILevelingTool/Prototypes/LevelingStructureFeasibilityData.cs`
 - [ ] T013 [P] Write failing four-vertex snapshot, partial-write rollback, bounds, changed-event, and save-tracking spike tests in `tests/COILevelingTool.Tests/Contract/V086TerrainAdapterContractTests.cs`
@@ -48,9 +48,9 @@
 - [ ] T017 [P] Write failing elevation, straight-drag, whole-line revalidation, self-collision, and zero-partial-creation spike tests in `tests/COILevelingTool.Tests/Contract/V086PlacementAdapterContractTests.cs`
 - [ ] T018 Implement the public placement/elevation/whole-line command spike in `src/COILevelingTool/Compatibility/V086/CoiPlacementAdapterV086.cs`
 - [ ] T019 Wire capability-gated prototype/dependency registration and feasibility logging in `src/COILevelingTool/Mod/COILevelingToolMod.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnostics.cs`
-- [ ] T020 Execute the in-game build-609 feasibility matrix, select Unity-only or five-Concrete-Slab fallback behavior, document actual Unity pricing and every pass/fail result in `specs/001-terrain-leveling-tool/feasibility.md`, and stop for plan revision if any safety-critical gate fails
+- [ ] T020 Execute the in-game `v0.8.6a` feasibility matrix, select Unity-only or five-Concrete-Slab fallback behavior, document actual Unity pricing and every pass/fail result in `specs/001-terrain-leveling-tool/feasibility.md`, and stop for plan revision if any safety-critical gate fails
 
-**Checkpoint**: The selected public integration path is proven on build 609, the unsupported path is disabled, and all adapter contract tests pass.
+**Checkpoint**: The selected public integration path is proven on `v0.8.6a`, the unsupported path is disabled, and all adapter contract tests pass.
 
 ---
 
@@ -58,7 +58,7 @@
 
 **Goal**: A player completes one valid 1x1 leveling structure in a retaining-wall parent cell; its four vertices reach the chosen elevation, terrain persists, and the temporary structure disappears.
 
-**Independent Test**: On build 609, construct a retaining wall, place one leveling structure on an eligible empty square in the same canonical 4x4 designation cell, finish with Unity at a vehicle-inaccessible site, and verify four-vertex leveling, no other vertex writes, wall integrity, immediate entity removal, save/load persistence, and full refund on injected failure.
+**Independent Test**: On `v0.8.6a`, construct a retaining wall, place one leveling structure on an eligible empty square in the same canonical 4x4 designation cell, finish with Unity at a vehicle-inaccessible site, and verify four-vertex leveling, no other vertex writes, wall integrity, immediate entity removal, save/load persistence, and full refund on injected failure.
 
 ### Tests for User Story 1
 
@@ -113,7 +113,7 @@
 
 **Goal**: Invalid targets and incompatible environments fail closed with clear feedback; terrain, structures, and player balances remain safe.
 
-**Independent Test**: Attempt every prohibited placement and injected failure on build 609, including one invalid square in a dragged line, and verify zero partial construction, no unintended terrain/structure changes, exact refunds, diagnostics, and operation disablement after unrecoverable compensation failure.
+**Independent Test**: Attempt every prohibited placement and injected failure on `v0.8.6a`, including one invalid square in a dragged line, and verify zero partial construction, no unintended terrain/structure changes, exact refunds, diagnostics, and operation disablement after unrecoverable compensation failure.
 
 ### Tests for User Story 3
 
@@ -144,7 +144,7 @@
 - [ ] T056 Verify clean, planned, and under-construction mod add/remove behavior and set the proven manifest flags in `src/COILevelingTool/manifest.json`, documenting limitations in `src/COILevelingTool/readme.txt`
 - [ ] T057 [P] Update installation, controls, Concrete Slab terminology, shared-vertex slope behavior, costs, compatibility, logs, and known limitations in `README.md`
 - [ ] T058 Run the full Release build and automated suite and record commands/results in `specs/001-terrain-leveling-tool/verification/automated-tests.md`
-- [ ] T059 Execute every step in `specs/001-terrain-leveling-tool/quickstart.md` on build 609 and record consolidated screenshots/log evidence in `specs/001-terrain-leveling-tool/verification/release-check.md`
+- [ ] T059 Execute every step in `specs/001-terrain-leveling-tool/quickstart.md` on `v0.8.6a` and record consolidated screenshots/log evidence in `specs/001-terrain-leveling-tool/verification/release-check.md`
 - [ ] T060 Produce and inspect the distributable ZIP, verifying root folder, manifest, DLL, readme, version bounds, and absence of development-only files in `artifacts/COILevelingTool-0.1.0.zip`
 
 **Checkpoint**: Release package, automated evidence, in-game evidence, compatibility statements, and documentation are complete.

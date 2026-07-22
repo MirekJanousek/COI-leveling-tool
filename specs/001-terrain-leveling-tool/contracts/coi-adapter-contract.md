@@ -1,4 +1,4 @@
-# Captain of Industry Adapter Contract (`v0.8.6`)
+# Captain of Industry Adapter Contract (`v0.8.6a`)
 
 All direct game API calls belong in `Compatibility/V086`. Pure placement, terrain, and accounting services depend on these contracts rather than concrete MaFi types.
 

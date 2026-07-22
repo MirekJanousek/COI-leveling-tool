@@ -1,0 +1,14 @@
+{
+  "id": "COILevelingTool",
+  "version": "0.1.0",
+  "display_name": "Terrain Leveling Tool",
+  "description_short": "Levels 1x1 terrain squares beside completed retaining walls.",
+  "authors": ["Miroslav Janousek"],
+  "primary_dlls": ["COILevelingTool.dll"],
+  "primary_mod_class_name": "COILevelingTool.Mod.COILevelingToolMod",
+  "min_game_version": "0.8.6a",
+  "max_verified_game_version": "0.8.6a",
+  "non_locking_dll_load": true,
+  "can_add_to_saved_game": false,
+  "can_remove_from_saved_game": false
+}

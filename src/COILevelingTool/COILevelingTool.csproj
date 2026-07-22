@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>COILevelingTool</AssemblyName>
+    <RootNamespace>COILevelingTool</RootNamespace>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <COI_MANAGED>$(COI_ROOT)\Captain of Industry_Data\Managed</COI_MANAGED>
+    <COI_MODS Condition="'$(COI_MODS)' == ''">$(APPDATA)\Captain of Industry\Mods</COI_MODS>
+    <DeployToModsFolder Condition="'$(DeployToModsFolder)' == ''">false</DeployToModsFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Mafi" HintPath="$(COI_MANAGED)\Mafi.dll" Private="false" />
+    <Reference Include="Mafi.Core" HintPath="$(COI_MANAGED)\Mafi.Core.dll" Private="false" />
+    <Reference Include="Mafi.Base" HintPath="$(COI_MANAGED)\Mafi.Base.dll" Private="false" />
+    <Reference Include="Mafi.Unity" HintPath="$(COI_MANAGED)\Mafi.Unity.dll" Private="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="manifest.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="readme.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="ValidateCoiRoot" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(COI_MANAGED)\Mafi.Core.dll')" Text="COI_ROOT must point to a Captain of Industry installation containing Captain of Industry_Data\Managed\Mafi.Core.dll." />
+  </Target>
+
+  <Target Name="PackageMod" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <PropertyGroup>
+      <PackageRoot>$(BaseOutputPath)package\COILevelingTool</PackageRoot>
+      <ArtifactDir>$(MSBuildProjectDirectory)\..\..\artifacts</ArtifactDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(PackageRoot);$(ArtifactDir)" />
+    <Copy SourceFiles="$(TargetPath);$(MSBuildProjectDirectory)\manifest.json;$(MSBuildProjectDirectory)\readme.txt" DestinationFolder="$(PackageRoot)" SkipUnchangedFiles="true" />
+    <ZipDirectory SourceDirectory="$(BaseOutputPath)package" DestinationFile="$(ArtifactDir)\COILevelingTool-0.1.0.zip" Overwrite="true" />
+    <MakeDir Directories="$(COI_MODS)\COILevelingTool" Condition="'$(DeployToModsFolder)' == 'true'" />
+    <Copy SourceFiles="$(TargetPath);$(MSBuildProjectDirectory)\manifest.json;$(MSBuildProjectDirectory)\readme.txt" DestinationFolder="$(COI_MODS)\COILevelingTool" Condition="'$(DeployToModsFolder)' == 'true'" />
+  </Target>
+</Project>

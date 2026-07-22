@@ -4,7 +4,7 @@
 
 - The leveling tool appears in the same Terraforming construction group as retaining walls.
 - It unlocks with the existing retaining-wall research.
-- It is enabled only on the verified `v0.8.6` compatibility profile.
+- It is enabled only on the verified `v0.8.6a` compatibility profile.
 - The player sees the active cost mode and cost before committing placement.
 
 ## Selection and Preview
@@ -24,7 +24,7 @@
 
 ## Construction and Cost
 
-- Preferred mode is material-free Unity-only completion if public `v0.8.6` APIs support it.
+- Preferred mode is material-free Unity-only completion if public `v0.8.6a` APIs support it.
 - Otherwise, each structure costs exactly five Concrete Slabs and retains native pay-with-Unity quick build.
 - The target Unity cost is `0.05` per structure only when the supported game API can represent/configure it; otherwise the displayed native calculated value is authoritative.
 - Lack of vehicle access may produce a base-game warning but does not block Unity completion.

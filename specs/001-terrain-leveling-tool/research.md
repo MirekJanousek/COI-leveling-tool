@@ -4,9 +4,9 @@
 
 ## Target Game and Compatibility Pin
 
-**Decision**: Target Captain of Industry Update 4.2, game `v0.8.6` build `609`, and `Mafi.Core 0.8.6.0`. Set both `min_game_version` and `max_verified_game_version` to `0.8.6` for the first release and reverify the exact build before packaging.
+**Decision**: Target Captain of Industry Update 4.2, game `v0.8.6a`, and `Mafi.Core 0.8.6.0`. Set both `min_game_version` and `max_verified_game_version` to `0.8.6a` for the first release and reverify the exact runtime version before packaging.
 
-**Rationale**: Update 4.2 was released on 2026-07-20 and is the latest stable release at planning time. Local game logs report `Build: 609, v0.8.6`, and the installed core assemblies report `0.8.6.0`. Update 4 requires mods to be recompiled and use the new manifest format.
+**Rationale**: Update 4.2 was released on 2026-07-20. The installed changelog reports `v0.8.6a`, and the installed core assemblies report `0.8.6.0`. No authoritative numeric build identifier for this patch was found locally, so the compatibility gate verifies the exact runtime game version string plus assembly capabilities. Update 4 requires mods to be recompiled and use the new manifest format.
 
 **Alternatives considered**: Targeting `0.8.0` broadly was rejected because the mod API is experimental and Update 4.2 changed Unity and construction/drag behavior. Tracking experimental branches was rejected as contrary to the stable-version requirement.
 
@@ -45,7 +45,7 @@
 
 ## Grid Model and Eligibility
 
-**Decision**: Map the specification's parent tile to the game's canonical 4x4 terrain-designation cell. Derive its origin and size from `TerrainDesignation.SIZE_TILES` (asserted as `4` for `v0.8.6`) rather than scattering a magic number. A target is one unoccupied 1x1 terrain square in that cell; the cell must contain at least one fully constructed `RetainingWallEntity`, and the target square itself must not overlap any entity or reservation.
+**Decision**: Map the specification's parent tile to the game's canonical 4x4 terrain-designation cell. Derive its origin and size from `TerrainDesignation.SIZE_TILES` (asserted as `4` for `v0.8.6a`) rather than scattering a magic number. A target is one unoccupied 1x1 terrain square in that cell; the cell must contain at least one fully constructed `RetainingWallEntity`, and the target square itself must not overlap any entity or reservation.
 
 **Rationale**: Installed public API documentation defines terrain designations as 4x4. `TerrainOccupancyManager` can query all occupying entities, and `RetainingWallEntity`/`RetainingWallProto` are public. Requiring a completed wall matches the feature's frozen-terrain use case and prevents a planned wall from granting eligibility before its final geometry exists.
 
@@ -72,7 +72,7 @@
 
 **Decision**: Implement a simulation-thread `CoiTerrainAdapterV086` that prevalidates all four vertices, snapshots original heights, applies the four writes, verifies the result, and restores all originals on exception or mismatch. Completed terrain relies on the game's changed-terrain serialization; the mod stores no parallel terrain record.
 
-**Rationale**: There is no public multi-vertex terrain transaction. The contained snapshot/verify/rollback adapter is the smallest safe composition of public APIs. Game documentation states changed terrain is serialized and deferred terrain events flush before save; an integration test must prove the chosen high-level setter marks and flushes changes in build 609.
+**Rationale**: There is no public multi-vertex terrain transaction. The contained snapshot/verify/rollback adapter is the smallest safe composition of public APIs. Game documentation states changed terrain is serialized and deferred terrain events flush before save; an integration test must prove the chosen high-level setter marks and flushes changes in `v0.8.6a`.
 
 **Alternatives considered**: Treating four writes as inherently atomic was rejected. Persisting a mod-owned terrain ledger would duplicate authoritative game state and complicate removal/migration.
 
@@ -147,7 +147,7 @@
 
 ## Test Strategy
 
-**Decision**: Split evidence into pure unit tests, installed-assembly capability contracts, and an in-game sandbox matrix on build 609. Include injected failures after each of four vertex writes and each refund step, shared-vertex adjacency, every retaining-wall orientation/position, line atomicity, map limits, occupancy/reservations, vehicle-inaccessible Unity completion, save/load, and clean mod removal.
+**Decision**: Split evidence into pure unit tests, installed-assembly capability contracts, and an in-game sandbox matrix on `v0.8.6a`. Include injected failures after each of four vertex writes and each refund step, shared-vertex adjacency, every retaining-wall orientation/position, line atomicity, map limits, occupancy/reservations, vehicle-inaccessible Unity completion, save/load, and clean mod removal.
 
 **Rationale**: MaFi provides no official automated gameplay harness. Pure policy logic remains testable outside the game, while integration guarantees require the actual simulation and save system.
 

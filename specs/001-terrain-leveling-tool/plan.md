@@ -6,21 +6,21 @@
 
 ## Summary
 
-Build a Captain of Industry Update 4.2 mod that registers a temporary 1x1 layout entity beside retaining walls, supports elevation and straight-line placement, and levels the four terrain vertices bounding each selected square when construction completes. The mod targets game `v0.8.6` build `609` and `Mafi.Core 0.8.6.0`, follows the official .NET Framework 4.8 mod template, reuses the retaining-wall toolbar group and research unlock, and stores no custom save data.
+Build a Captain of Industry Update 4.2 mod that registers a temporary 1x1 layout entity beside retaining walls, supports elevation and straight-line placement, and levels the four terrain vertices bounding each selected square when construction completes. The mod targets game `v0.8.6a` and `Mafi.Core 0.8.6.0`, follows the official .NET Framework 4.8 mod template, reuses the retaining-wall toolbar group and research unlock, and stores no custom save data.
 
-All game-facing work is isolated behind a pinned `v0.8.6` compatibility layer. Before feature implementation, executable spikes must prove that the public APIs can provide safe terrain rollback, all-or-none line placement, construction accounting/refunds, and the requested Unity construction behavior. Unsupported behavior fails closed; no Harmony patch, private reflection, raw save edit, or undocumented internal hook is allowed without a new approved plan exception.
+All game-facing work is isolated behind a pinned `v0.8.6a` compatibility layer. Before feature implementation, executable spikes must prove that the public APIs can provide safe terrain rollback, all-or-none line placement, construction accounting/refunds, and the requested Unity construction behavior. Unsupported behavior fails closed; no Harmony patch, private reflection, raw save edit, or undocumented internal hook is allowed without a new approved plan exception.
 
 ## Technical Context
 
 **Language/Version**: C# (`LangVersion=latest`) targeting .NET Framework 4.8 (`net48`)
 
-**Primary Dependencies**: Installed Captain of Industry `v0.8.6` build `609` assemblies referenced through `COI_ROOT`, including `Mafi.dll`, `Mafi.Core.dll`, `Mafi.Base.dll`, and `Mafi.Unity.dll`; no runtime third-party mod framework
+**Primary Dependencies**: Installed Captain of Industry `v0.8.6a` assemblies referenced through `COI_ROOT`, including `Mafi.dll`, `Mafi.Core.dll`, `Mafi.Base.dll`, and `Mafi.Unity.dll`; no runtime third-party mod framework
 
 **Storage**: No mod-owned persistent data; successful terrain changes use the game's changed-terrain serialization, while temporary construction state uses the game's entity/construction save system
 
-**Testing**: MSTest-based unit and contract tests for pure validation/accounting logic; assembly capability tests against the installed `v0.8.6` metadata; repeatable in-game sandbox verification and log inspection
+**Testing**: MSTest-based unit and contract tests for pure validation/accounting logic; assembly capability tests against the installed `v0.8.6a` metadata; repeatable in-game sandbox verification and log inspection
 
-**Target Platform**: Windows PC, Captain of Industry Update 4.2 `v0.8.6` build `609`; Unity player `6000.3.19f1`
+**Target Platform**: Windows PC, Captain of Industry Update 4.2 `v0.8.6a`; Unity player `6000.3.19f1`
 
 **Project Type**: Independently installable Captain of Industry executable mod (single C# mod assembly plus test project)
 
@@ -34,7 +34,7 @@ All game-facing work is isolated behind a pinned `v0.8.6` compatibility layer. B
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- **Official guidance**: Target is Update 4.2 `v0.8.6` build `609`. The official MaFi modding repository and installed XML API documentation are authoritative. The plan uses `IMod`/prototype registration, Update 4 manifests, installed game references, and public `v0.8.6` APIs only.
+- **Official guidance**: Target is Update 4.2 `v0.8.6a`. The official MaFi modding repository and installed XML API documentation are authoritative. The plan uses `IMod`/prototype registration, Update 4 manifests, installed game references, and public `v0.8.6a` APIs only.
 - **Core scope**: Eligibility is restricted to an empty 1x1 terrain square whose canonical 4x4 terrain-designation parent contains a fully constructed retaining wall. Parent cells without a wall and squares overlapping a wall are rejected.
 - **Terrain and save safety**: The adapter preflights occupancy, bounds, four-vertex representability, wall eligibility, and the complete dragged line. It snapshots four vertex heights, performs simulation-thread mutation without terrain physics, verifies the result, and rolls back on failure. No mod save record is required; save/load persistence is verified in-game.
 - **Compatibility and minimal intrusion**: A version-gated adapter is the only game-facing layer. Missing capabilities disable placement/mutation and emit one actionable diagnostic. No unrelated behavior is replaced, and custom assets are avoided for the first implementation.
@@ -43,7 +43,7 @@ All game-facing work is isolated behind a pinned `v0.8.6` compatibility layer. B
 
 **Gate Result (pre-research)**: **PASS** — the spec defines scope, bounds, failure recovery, compatibility, and measurable acceptance; technical unknowns were routed to Phase 0 research.
 
-**Gate Result (post-design)**: **PASS** — research identified public `v0.8.6` primitives and the design contains all unsupported composite guarantees behind fail-closed feasibility gates. No constitution exception is planned.
+**Gate Result (post-design)**: **PASS** — research identified public `v0.8.6a` primitives and the design contains all unsupported composite guarantees behind fail-closed feasibility gates. No constitution exception is planned.
 
 ## Project Structure
 

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <COI_MANAGED>$(COI_ROOT)\Captain of Industry_Data\Managed</COI_MANAGED>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.10.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.10.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\COILevelingTool\COILevelingTool.csproj" />
+    <Reference Include="Mafi" HintPath="$(COI_MANAGED)\Mafi.dll" Private="false" />
+    <Reference Include="Mafi.Core" HintPath="$(COI_MANAGED)\Mafi.Core.dll" Private="false" />
+    <Reference Include="Mafi.Base" HintPath="$(COI_MANAGED)\Mafi.Base.dll" Private="false" />
+    <Reference Include="Mafi.Unity" HintPath="$(COI_MANAGED)\Mafi.Unity.dll" Private="false" />
+  </ItemGroup>
+</Project>

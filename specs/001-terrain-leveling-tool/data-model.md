@@ -11,7 +11,7 @@ Represents the canonical 4x4 terrain-designation cell used for retaining-wall el
 | Field | Meaning |
 |---|---|
 | `Origin` | Canonical lower/grid origin derived with `TerrainDesignation.SIZE_TILES` |
-| `SizeTiles` | Runtime-asserted designation size (`4` on game `v0.8.6`) |
+| `SizeTiles` | Runtime-asserted designation size (`4` on game `v0.8.6a`) |
 | `Area` | Sixteen terrain squares within the cell |
 | `RetainingWalls` | Fully constructed retaining-wall entities found in the area |
 
@@ -124,7 +124,7 @@ Validation rules:
 |---|---|
 | `VertexHeights` | Original height for each unique selected vertex |
 | `RequestedElevation` | Target height |
-| `GameVersion` | `0.8.6` |
+| `GameVersion` | `0.8.6a` |
 | `AssemblyVersion` | `Mafi.Core 0.8.6.0` |
 
 ### LevelingOperation
@@ -170,7 +170,7 @@ Startup result proving required versioned integrations.
 
 | Capability | Required evidence |
 |---|---|
-| Version | Game build 609 / `v0.8.6`; core assembly `0.8.6.0` |
+| Version | Game `v0.8.6a`; core assembly `0.8.6.0` |
 | Grid | Terrain designation size and canonical mapping |
 | Occupancy | Static entity and retaining-wall queries |
 | Bounds | Square and vertex limit checks |
