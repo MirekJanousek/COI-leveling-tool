@@ -10,6 +10,8 @@ Probe() -> CapabilityProfileV086
 
 Must verify game build, core assembly version, grid constant, retaining-wall prototype/entity access, occupancy and bounds queries, terrain read/write/notification behavior, placement extension points, completion event, and normal entity removal.
 
+The placement capability is enabled only when the mod can publicly register and activate a dedicated placement controller, display previews at an explicit absolute height anchor, adjust that anchor beyond the stock machine placer's local +/-1 range, and submit one simulation command for the complete selection.
+
 Failure is non-throwing at game startup: return a disabled profile, log missing signatures, and prevent tool registration or activation.
 
 ## Eligibility Adapter
@@ -39,9 +41,11 @@ Commit(selection, elevation) -> batchResult
 Rules:
 
 - Preview validation is advisory; commit repeats all checks on the simulation thread.
+- The requested elevation is an explicit absolute height shared by the selection; it is not derived from or clamped to the stock machine placer's local terrain-relative range.
+- Automated metadata tests and an in-game spike must prove preview/commit parity at least four height steps above and below local terrain.
 - Commit creates zero entities until the whole selection and self-collision checks succeed.
 - A batch failure after creation begins must remove all entities created by that batch before construction begins, so no construction cost has been charged.
-- Internal UI patching is prohibited; absent public extension support disables drag placement and fails the feasibility gate.
+- Internal UI patching and private reflection are prohibited; absent a complete public controller lifecycle disables placement and fails the feasibility gate.
 
 ## Terrain Adapter
 

@@ -34,7 +34,7 @@ The former version blocker is resolved. The Release skeleton was rebuilt and tes
 
 The installed `Mafi.Core.xml` contract for `TerrainManager.SetHeightPreserveRelativeLayersNoPhysics` states that the operation does not invoke events or set the changed bit. The adapter now pairs every apply and restore write with the public `NotifyTileHeightLayersChanged` API, whose contract explicitly sets the changed flag and defers the height-change event.
 
-Automated contract coverage proves deterministic four-vertex snapshotting, bounds rejection before mutation, changed notification for every write, verification, and rollback after injected failures before writes 1–4. The Release suite passes with 27 tests. Save/reload persistence and actual simulation-thread behavior remain part of the T020 in-game matrix and are not claimed by this automated spike.
+Automated contract coverage proves deterministic four-vertex snapshotting, bounds rejection before mutation, changed notification for every write, verification, and rollback after injected failures before writes 1–4. The Release suite passes with 27 tests. Save/reload persistence and actual simulation-thread behavior remain part of the T020C in-game matrix and are not claimed by this automated spike.
 
 Construction and placement access bridges plus fault-injection tests have been added as supporting work, but T015–T018 remain open until the bridges are bound to and proven through the actual public `v0.8.6a` services.
 
@@ -44,7 +44,7 @@ Installed `v0.8.6a` public metadata exposes `IConstructionManager.EntityConstruc
 
 This fails the adapter contract requirement to capture actual material and Unity charges before construction progress is discarded. Recomputing from prototype costs would not prove the actual charge and is explicitly prohibited by the accounting contract. The capability profile therefore reports `construction.exact_charge_capture=false` and remains disabled even on the exact supported version.
 
-Per the constitution and T020, no user-story implementation may begin. The spec and plan need an approved revision choosing one of these product changes:
+Per the constitution and the Phase 2 gate, no user-story implementation may begin. The spec and plan need an approved revision choosing one of these product changes:
 
 1. remove post-completion Unity refund guarantees and accept only pre-mutation failure handling;
 2. use a no-cost temporary entity and perform a separately controlled public Unity transaction whose amount the mod owns; or
@@ -56,9 +56,9 @@ The in-game matrix is deferred because the public metadata gate already fails. N
 
 The user approved option 2 on 2026-07-22: completed construction costs are not refunded when the subsequent terrain operation fails. FR-028, SC-011, the adapter/gameplay contracts, research, data model, quickstart, plan, and task descriptions now require terrain rollback, normal temporary-entity cleanup, no additional charge, and one explicit no-refund failure notification.
 
-Exact charge capture and compensation are no longer required capabilities, so the exact-version capability profile can enable when all remaining public signatures are present. The remaining T020 in-game matrix must still prove Unity construction behavior, line atomicity, save tracking, rollback, cleanup, notification, and the selected cost mode before user-story implementation begins.
+Exact charge capture and compensation are no longer required capabilities, so the exact-version capability profile can enable when all remaining public signatures are present. The remaining T020A–T020C gate must still prove unrestricted elevation, Unity construction behavior, line atomicity, save tracking, rollback, cleanup, notification, and the selected cost mode before user-story implementation begins.
 
-## T020 in-game feasibility observations — 2026-07-22
+## Initial T020 in-game feasibility observations — 2026-07-22
 
 Test environment: Captain of Industry `v0.8.6a` sandbox with the Release feasibility package.
 
@@ -75,4 +75,12 @@ Observed limitations/failures:
 - a candidate completed at `terrain + 1` does not level terrain. This is not yet evidence of a terrain-adapter failure because T012/T019 currently register only the placement/cost prototypes; completion forwarding into the terrain spike is not wired;
 - the custom generated toolbar icon cannot be consumed as a loose PNG. The current package uses the built-in Concrete Slab icon pending MaFi's supported Unity asset-bundle workflow.
 
-Gate interpretation: retaining-wall menu integration, 1x1 placement, both cost modes, and wall collision are proven. Required general elevation selection is **not proven** on the machine placement surface and currently fails the gameplay contract. T020 remains open while the public elevation/placement API is investigated; user-story implementation remains blocked.
+Gate interpretation: retaining-wall menu integration, 1x1 placement, both cost modes, and wall collision are proven. Required general elevation selection is **not proven** on the machine placement surface and currently fails the gameplay contract. T020A–T020C replace the former single gate while the public dedicated-controller route is investigated; user-story implementation remains blocked.
+
+## Placement plan revision — unrestricted elevation required
+
+The user rejected a +/-1 product limitation because retaining-wall correction routinely needs larger elevation differences. The stock machine placement surface is therefore permanently rejected for this feature rather than accepted as a degraded fallback.
+
+The revised T020A–T020C gate investigates a dedicated mod-owned placement controller. It must use a complete public `Mafi.Unity` lifecycle, own an explicit absolute height anchor, preview and submit a straight selection at least four height steps below and above local terrain, and hand the whole selection to one simulation-thread command for final validation and atomic creation. Merely finding public types in metadata does not pass the gate: registration, activation, preview, adjustment, submission, and deactivation must all work in the running game without private reflection or patches.
+
+If this controller cannot be proven on `v0.8.6a`, the planned mod is infeasible under the constitution and implementation stops before T021. The plan does not permit silently reverting to the stock +/-1 behavior.

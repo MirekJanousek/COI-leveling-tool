@@ -96,11 +96,11 @@
 
 ## Drag Placement and All-or-None Commit
 
-**Decision**: First test the stock layout-entity mass placer for axis-aligned drag and elevation. A custom public simulation command must revalidate the entire ordered line, including self-collision, before creating the first entity. If public extension points cannot enforce straight-only all-or-none placement, stop the feature implementation and request a policy/scope decision; do not patch internal UI.
+**Decision**: The stock layout-entity mass placer is rejected as the feature's elevation surface because in-game `v0.8.6a` testing limits an ordinary machine to one step above or below local terrain. Spike a dedicated mod-owned placement controller using only public `Mafi.Unity` activation, cursor/preview, height-anchor, and input-command extension points. The controller owns one explicit absolute target elevation for the entire selection, while a custom public simulation command revalidates the ordered line, including self-collision, before creating the first entity. Prove at least four steps above and below local terrain. If those public extension points cannot be constructed, registered, and activated without private reflection or patching, stop the feature as infeasible on `v0.8.6a`.
 
-**Rationale**: Update 4.2 supports drag placement and installed code contains a generic mass placer, but its extension surface and atomic behavior are not officially documented. UI-only validation cannot provide the formal guarantee because state can change before simulation command execution.
+**Rationale**: Update 4.2 metadata exposes a generic mass placer, axis-aligned drag support, previews, and height-anchor-related APIs, but the stock machine behavior cannot express the elevation differences players need. Separating selection/preview from entity placement keeps the absolute height under mod control while retaining a simulation-thread atomicity boundary. UI-only validation cannot provide the formal guarantee because state can change before simulation command execution.
 
-**Alternatives considered**: Sequential base commands can partially create a line. Harmony-patching the internal placer violates minimal intrusion.
+**Alternatives considered**: Accepting the stock +/-1 limit was rejected because it defeats the core use case. Sequential base commands can partially create a line. Patching or privately reflecting into the stock placer remains prohibited. A dedicated controller is acceptable only if its complete lifecycle uses public APIs.
 
 **Sources**:
 

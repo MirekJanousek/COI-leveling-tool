@@ -6,9 +6,9 @@
 
 ## Summary
 
-Build a Captain of Industry Update 4.2 mod that registers a temporary 1x1 layout entity beside retaining walls, supports elevation and straight-line placement, and levels the four terrain vertices bounding each selected square when construction completes. The mod targets game `v0.8.6a` and `Mafi.Core 0.8.6.0`, follows the official .NET Framework 4.8 mod template, reuses the retaining-wall toolbar group and research unlock, and stores no custom save data.
+Build a Captain of Industry Update 4.2 mod that registers a temporary 1x1 layout entity beside retaining walls, supports unrestricted absolute elevation selection and straight-line placement, and levels the four terrain vertices bounding each selected square when construction completes. The mod targets game `v0.8.6a` and `Mafi.Core 0.8.6.0`, follows the official .NET Framework 4.8 mod template, reuses the retaining-wall toolbar group and research unlock, and stores no custom save data.
 
-All game-facing work is isolated behind a pinned `v0.8.6a` compatibility layer. Before feature implementation, executable spikes must prove safe terrain rollback, all-or-none line placement, normal construction completion/removal, and the requested Unity construction behavior. Completed construction costs are not refunded after terrain failure because the public API exposes no exact receipt. Unsupported behavior fails closed; no Harmony patch, private reflection, raw save edit, or undocumented internal hook is allowed without a new approved plan exception.
+All game-facing work is isolated behind a pinned `v0.8.6a` compatibility layer. Before feature implementation, executable spikes must prove a dedicated public placement surface with an explicit absolute height anchor, safe terrain rollback, all-or-none line placement, normal construction completion/removal, and the requested Unity construction behavior. The stock machine placer is not acceptable because in-game evidence shows it limits selection to one step above or below local terrain. Completed construction costs are not refunded after terrain failure because the public API exposes no exact receipt. Unsupported behavior fails closed; no Harmony patch, private reflection, raw save edit, or undocumented internal hook is allowed without a new approved plan exception.
 
 ## Technical Context
 
@@ -26,7 +26,7 @@ All game-facing work is isolated behind a pinned `v0.8.6a` compatibility layer. 
 
 **Performance Goals**: Placement validation is linear in selected sub-tiles, performs no full-map scan, and validates a 100-sub-tile line in under 5 ms in isolated benchmarks; in-game maximum-length preview/commit causes no frame or simulation stall above 16 ms attributable to the mod on the reference machine
 
-**Constraints**: Simulation-thread mutation only; reject rather than clamp at map bounds; mutate only the four vertices bounding each selected 1x1 square; no uncontrolled terrain physics; no retaining-wall overlap; all sub-tiles in a line prevalidated before creation; exact version capability probe at startup; no private API patching; custom Unity asset bundles deferred until MaFi resolves the documented Unity-editor-version mismatch
+**Constraints**: Simulation-thread mutation only; reject rather than clamp at map bounds; mutate only the four vertices bounding each selected 1x1 square; no uncontrolled terrain physics; no retaining-wall overlap; all sub-tiles in a line prevalidated before creation; absolute elevation selection must reach safely representable targets beyond the stock placer's local +/-1 range; exact version capability probe at startup; no private API patching; custom Unity asset bundles deferred until MaFi resolves the documented Unity-editor-version mismatch
 
 **Scale/Scope**: Single-player, one selected square or one axis-aligned consecutive line up to the game's supported drag length; each accepted structure becomes an independent completion operation; no general terraforming, multiplayer synchronization, wall mutation, or freeform area placement
 
@@ -43,7 +43,7 @@ All game-facing work is isolated behind a pinned `v0.8.6a` compatibility layer. 
 
 **Gate Result (pre-research)**: **PASS** — the spec defines scope, bounds, failure recovery, compatibility, and measurable acceptance; technical unknowns were routed to Phase 0 research.
 
-**Gate Result (post-design revision)**: **CONDITIONAL PASS (2026-07-22)**. The approved product decision removes post-completion refunds from FR-028/SC-011. Exact charge capture is no longer required. Terrain rollback, normal entity cleanup, one failure notification, no additional charge, and all remaining placement/construction capabilities still require automated and in-game proof before story implementation.
+**Gate Result (post-design revision)**: **CONDITIONAL PASS (2026-07-22)**. The approved product decision removes post-completion refunds from FR-028/SC-011. Exact charge capture is no longer required. In-game evidence subsequently rejected the stock machine placement surface because its local +/-1 elevation range does not satisfy FR-003. A dedicated public placement controller using an explicit absolute height anchor is now the only planned route. Terrain rollback, normal entity cleanup, unrestricted elevation, one failure notification, no additional charge, and all remaining placement/construction capabilities still require automated and in-game proof before story implementation.
 
 ## Project Structure
 

@@ -101,7 +101,7 @@ As a player, I receive normal placement feedback when leveling would be invalid 
 
 - **FR-001**: The mod MUST provide a distinct buildable leveling structure with an exact 1x1-sub-tile footprint.
 - **FR-002**: The leveling structure MUST be available in the same player-facing construction menu or category as retaining walls.
-- **FR-003**: Players MUST be able to select the leveling structure's elevation before committing its construction, within the elevation range allowed by the game.
+- **FR-003**: Players MUST be able to select the leveling structure's absolute target elevation before committing its construction, across the game's globally representable construction/terrain range. The feature MUST NOT inherit the ordinary machine placer's local one-step-above/one-step-below restriction; inability to select targets beyond that local range makes the feature unsupported.
 - **FR-004**: Before commitment, the placement preview MUST identify every sub-tile that may be changed and the selected elevation.
 - **FR-005**: On successful construction, the mod MUST set all mutable terrain within the selected empty sub-tile's boundary to the selected elevation when its parent tile contains a retaining wall.
 - **FR-006**: The mod MUST NOT mutate terrain outside the explicitly selected sub-tile or straight line of consecutive sub-tiles.
@@ -151,6 +151,7 @@ As a player, I receive normal placement feedback when leveling would be invalid 
 - **SC-009**: In 100% of valid placements unreachable by construction vehicles, the player can complete every leveling structure using Unity and obtain the same terrain result as at a reachable location.
 - **SC-010**: In 100% of tests on sub-tiles overlapping retaining walls or belonging to parent tiles without retaining walls, placement is rejected and no terrain or structure changes.
 - **SC-011**: In 100% of simulated post-construction terrain failures, the target sub-tile remains unchanged, the temporary structure is absent, no additional charge is made, and the player receives one actionable failure notification stating that completed construction costs are not refunded.
+- **SC-012**: On the pinned game version, the placement preview and committed construction both preserve explicitly selected target elevations at least four height steps above and four height steps below the local terrain wherever those elevations pass the mod's safety validation.
 
 ## Assumptions
 

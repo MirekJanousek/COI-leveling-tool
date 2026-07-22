@@ -11,6 +11,7 @@
 
 - The player may select one 1x1 terrain square or drag one consecutive axis-aligned line.
 - Every previewed square uses the same chosen elevation.
+- Elevation is an explicit absolute target and must support safe selections beyond one local height step above or below the terrain.
 - A square is eligible only when it is empty, does not overlap a retaining wall, and belongs to the canonical 4x4 terrain-designation cell containing a fully constructed retaining wall.
 - The preview identifies every affected square and the requested elevation.
 - Every invalid square receives ordinary player-facing placement feedback.

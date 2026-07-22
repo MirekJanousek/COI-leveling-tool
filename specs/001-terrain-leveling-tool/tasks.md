@@ -34,7 +34,7 @@
 
 **Purpose**: Prove the public game APIs and establish shared compatibility, diagnostics, terrain, placement, and construction boundaries.
 
-**CRITICAL**: Do not begin any user-story implementation until T008–T020 pass. If a required capability fails, stop and update the spec/plan; do not substitute undocumented integration.
+**CRITICAL**: Do not begin any user-story implementation until T008–T020C pass. If a required capability fails, stop and update the spec/plan; do not substitute undocumented integration.
 
 - [X] T008 [P] Define game-independent adapter interfaces and result contracts in `src/COILevelingTool/Compatibility/ICoiTerrainAdapter.cs`, `src/COILevelingTool/Compatibility/ICoiPlacementAdapter.cs`, and `src/COILevelingTool/Compatibility/ICoiConstructionAdapter.cs`
 - [X] T009 [P] Implement stable failure reason codes and structured diagnostic context models in `src/COILevelingTool/Diagnostics/LevelingFailureCode.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnosticContext.cs`
@@ -48,7 +48,9 @@
 - [X] T017 [P] Write failing elevation, straight-drag, whole-line revalidation, self-collision, and zero-partial-creation spike tests in `tests/COILevelingTool.Tests/Contract/V086PlacementAdapterContractTests.cs`
 - [X] T018 Implement the public placement/elevation/whole-line command spike in `src/COILevelingTool/Compatibility/V086/CoiPlacementAdapterV086.cs`
 - [X] T019 Wire capability-gated prototype/dependency registration and feasibility logging in `src/COILevelingTool/Mod/COILevelingToolMod.cs` and `src/COILevelingTool/Diagnostics/LevelingDiagnostics.cs`
-- [ ] T020 Execute the in-game `v0.8.6a` feasibility matrix, select Unity-only or five-Concrete-Slab fallback behavior, document actual Unity pricing and every pass/fail result in `specs/001-terrain-leveling-tool/feasibility.md`, and stop for plan revision if any safety-critical gate fails
+- [ ] T020A Write installed-metadata contract tests for a complete public dedicated-controller lifecycle (registration, activation, cursor/preview, absolute height adjustment, deactivation, and simulation-command submission) in `tests/COILevelingTool.Tests/Contract/V086DedicatedPlacementControllerContractTests.cs`; do not treat type presence alone as sufficient
+- [ ] T020B Implement a feasibility-only dedicated placement controller with an explicit absolute height anchor and straight-line preview in `src/COILevelingTool/Unity/Placement/V086/LevelingPlacementControllerV086.cs`, using no private reflection or patched stock behavior
+- [ ] T020C Execute the in-game `v0.8.6a` feasibility matrix at local terrain offsets of at least -4 and +4, prove preview/commit elevation parity and all-or-none line submission, select Unity-only or five-Concrete-Slab fallback behavior, and document actual Unity pricing and every pass/fail result in `specs/001-terrain-leveling-tool/feasibility.md`; if the public controller lifecycle or any safety-critical gate fails, mark the feature infeasible on `v0.8.6a` and stop
 
 **Checkpoint**: The selected public integration path is proven on `v0.8.6a`, the unsupported path is disabled, and all adapter contract tests pass.
 
@@ -156,7 +158,7 @@
 ### Phase Dependencies
 
 - **Phase 1 — Setup**: No dependencies.
-- **Phase 2 — Foundational gate**: Depends on Phase 1 and blocks all story work. T020 is the explicit go/no-go decision.
+- **Phase 2 — Foundational gate**: Depends on Phase 1 and blocks all story work. T020A–T020C are the explicit go/no-go decision.
 - **Phase 3 — US1**: Depends on Phase 2 only; delivers the single-square MVP.
 - **Phase 4 — US2**: Depends on Phase 2 only for independent preview/placement work, but merges most safely after US1 because both wire `COILevelingToolMod.cs`.
 - **Phase 5 — US3**: Depends on Phase 2 only for independent validation/failure work, but final integration follows US1/US2 because it hardens their services.
@@ -191,7 +193,7 @@ After T001 establishes names/paths, T002–T005 can proceed in parallel. T006 th
 
 ### Foundational
 
-T008–T010 can proceed in parallel. After the shared contracts exist, the prototype (T012), terrain spike (T013–T014), construction spike (T015–T016), and placement spike (T017–T018) are separable workstreams. T019–T020 integrate and decide the gate.
+T008–T010 can proceed in parallel. After the shared contracts exist, the prototype (T012), terrain spike (T013–T014), construction spike (T015–T016), and placement spike (T017–T018) are separable workstreams. T019 and T020A–T020C integrate and decide the gate.
 
 ### User Story 1
 
@@ -230,7 +232,7 @@ These tests use different files and can be written concurrently before T048–T0
 ### MVP First
 
 1. Complete Setup (T001–T007).
-2. Complete the mandatory feasibility/safety gate (T008–T020).
+2. Complete the mandatory feasibility/safety gate (T008–T020C).
 3. Complete User Story 1 (T021–T033).
 4. Stop and validate the single-square MVP independently before adding drag placement.
 
@@ -247,5 +249,5 @@ These tests use different files and can be written concurrently before T048–T0
 - `[P]` means file-level parallelism only; avoid concurrent edits to shared registration/service files.
 - The canonical fallback resource is `Concrete Slab`, not the obsolete in-game Bricks product.
 - The four vertices bounding a selected square are shared with neighboring terrain; tests compare written vertex coordinates and document possible adjacent visual slopes.
-- T020 is a hard stop. Unsupported fractional Unity, line atomicity, terrain rollback, or normal cleanup must be resolved by revising the product/plan, never by undocumented patching.
+- T020C is a hard stop. Failure to provide unrestricted absolute elevation through a complete public controller lifecycle is not eligible for a +/-1 scope fallback. Unsupported fractional Unity, line atomicity, terrain rollback, or normal cleanup must be resolved by revising the product/plan, never by undocumented patching.
 - Commit after each completed task or coherent test/implementation pair.

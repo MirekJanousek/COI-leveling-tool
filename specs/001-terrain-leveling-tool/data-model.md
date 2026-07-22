@@ -88,6 +88,8 @@ Representative reason codes: `UnsupportedGameVersion`, `CapabilityMissing`, `Out
 | `CostPolicy` | Preferred Unity-only mode or supported Concrete Slab fallback |
 | `ElevationEnabled` | Capability proven during feasibility spike |
 | `DragEnabled` | Capability proven during feasibility spike |
+| `PublicControllerLifecycle` | Registration, activation, preview, height adjustment, and deactivation are all reachable through public APIs |
+| `AbsoluteHeightAnchorEnabled` | Preview and commit preserve an explicit absolute elevation beyond the stock local +/-1 range |
 
 ### ConstructionCostPolicy
 

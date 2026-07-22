@@ -19,7 +19,8 @@ The official mod guide recommends Visual Studio. `dotnet build` is useful for co
 Before implementing general feature code, run the `v0.8.6a` compatibility tests/spikes and record evidence for:
 
 - material-free Unity-only construction and fractional cost support;
-- elevation and axis-aligned drag behavior for the custom 1x1 layout entity;
+- public registration/activation of the dedicated placement controller and absolute elevation preview at least four steps above and below local terrain;
+- axis-aligned drag behavior for the custom 1x1 layout entity;
 - all-or-none simulation-thread line creation;
 - four-vertex height mutation, changed-terrain save tracking, verification, and rollback;
 - idempotent completion handling, normal entity cleanup, and one no-refund failure notification.
@@ -64,7 +65,7 @@ The contract suite requires `COI_ROOT` and must verify runtime game version `0.8
 3. Research/unlock retaining walls and confirm the leveling tool appears in the same Terraforming menu.
 4. Place and fully construct a retaining wall.
 5. Select an empty 1x1 square in the same canonical 4x4 terrain-designation cell without overlapping the wall.
-6. Set an elevation, place one tool, finish it with Unity, and verify:
+6. Set an absolute elevation at least four height steps above or below the local terrain, confirm the preview is not clamped to the stock machine +/-1 range, place one tool, finish it with Unity, and verify:
    - the four bounding vertices reach the chosen height;
    - no other stored vertex changes;
    - the wall remains intact;
